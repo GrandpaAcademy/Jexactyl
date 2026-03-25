@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 
 const colorOptions = [
-    { hex: '#16a34a', name: 'Jexactyl Green' },
+    { hex: '#16a34a', name: 'Zero-Bot Green' },
     { hex: '#12aaaa', name: 'Microsoft Teal' },
     { hex: '#ff0000', name: 'Brick Red' },
     { hex: '#9D00FF', name: 'Iris Purple' },
@@ -38,44 +38,63 @@ export default ({ defaultColor }: { defaultColor: string }) => {
     };
 
     return (
-        <div>
-            <div className={'w-full flex flex-row items-center mb-8'}>
-                <div className={'flex flex-col flex-shrink'} style={{ minWidth: '0' }}>
-                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Theme Preferences</h2>
-                    <p
-                        className={
-                            'hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden'
-                        }
-                    >
-                        Select a preferred primary color for your Panel UI.
-                    </p>
-                </div>
+        <div className="w-full max-w-5xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="text-center space-y-2">
+                <h2 className="text-3xl text-neutral-50 font-black uppercase tracking-widest tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">Aesthetic Alignment</h2>
+                <p className="text-neutral-400 text-sm opacity-70">
+                    Define the primary visual signature of your administrative enclave.
+                </p>
             </div>
-            <AdminBox status={status} title={'Set Primary Color'}>
-                <div className={'grid grid-cols-4 lg:grid-cols-8 gap-4 lg:gap-8'}>
+
+            <AdminBox 
+                status={status} 
+                title={'Primary Chromatic Signature'}
+                className="bg-zb-card/20 backdrop-blur-xl border border-white/5"
+            >
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 lg:gap-8">
                     {colorOptions.map(option => (
                         <div
-                            className={'text-center relative'}
+                            className="text-center relative group cursor-pointer"
                             key={option.hex}
                             onClick={() => changeColor(option.hex)}
                         >
-                            <FontAwesomeIcon
-                                icon={faCircle}
+                            <div className="relative inline-block">
+                                <FontAwesomeIcon
+                                    icon={faCircle}
+                                    style={{ color: option.hex }}
+                                    className={`text-5xl transition-all duration-300 transform group-hover:scale-110 ${
+                                        defaultColor === option.hex 
+                                        ? 'shadow-[0_0_20px_rgba(255,255,255,0.2)]' 
+                                        : 'opacity-60 group-hover:opacity-100'
+                                    }`}
+                                />
+                                {defaultColor === option.hex && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <CheckCircleIcon className="w-8 h-8 text-white drop-shadow-lg" />
+                                    </div>
+                                )}
+                            </div>
+                            <p className={`text-[10px] mt-3 font-bold uppercase tracking-widest transition-colors ${
+                                defaultColor === option.hex ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'
+                            }`}>
+                                {option.name}
+                            </p>
+                            
+                            {/* Glow Effect on Hover */}
+                            <div 
+                                className="absolute inset-0 -z-10 bg-current opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-300 rounded-full"
                                 style={{ color: option.hex }}
-                                size={'3x'}
-                                className={'hover:brightness-125 transition duration-300'}
                             />
-                            {defaultColor === option.hex && (
-                                <div className={'absolute top-[10px] right-[27px]'}>
-                                    <CheckCircleIcon className={'w-7'} />
-                                </div>
-                            )}
-                            <p className={'italic text-xs mt-1 text-gray-400'}>{option.name}</p>
                         </div>
                     ))}
                 </div>
             </AdminBox>
-            <p className={'text-gray-400 mt-2 text-right'}>Select a color from the options to apply it.</p>
+            
+            <div className="flex items-center justify-center gap-3 opacity-50">
+                <div className="h-px w-12 bg-gradient-to-r from-transparent to-neutral-500" />
+                <p className="text-neutral-400 text-xs italic">Selection will be synchronized globally in real-time</p>
+                <div className="h-px w-12 bg-gradient-to-l from-transparent to-neutral-500" />
+            </div>
         </div>
     );
 };
