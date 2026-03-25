@@ -1,31 +1,41 @@
 .button {
     @apply px-4 py-2 inline-flex items-center justify-center;
-    @apply rounded text-base font-semibold transition-all duration-300;
-    @apply focus:ring-[3px] focus:ring-offset-2 focus:ring-offset-slate-700 focus:ring-opacity-50;
+    @apply rounded-lg text-sm font-semibold transition-all duration-250;
+    @apply focus:outline-none focus:ring-2 focus:ring-zb-accent/50 focus:ring-offset-2 focus:ring-offset-zb-bg;
+    letter-spacing: 0.025em;
 
     /* Sizing Controls */
     &.small {
-        @apply px-4 py-0 h-8 font-normal text-sm focus:ring-2;
+        @apply px-3 py-1.5 h-8 font-medium text-xs rounded-md;
     }
 
     &.large {
-        @apply px-5 py-3;
+        @apply px-6 py-3 text-base rounded-xl;
     }
 
     &.secondary {
-        @apply text-slate-50 bg-transparent;
+        @apply bg-white/5 border border-white/10 text-zb-text;
+
+        &:hover:not(:disabled) {
+            @apply bg-white/10 border-white/20 text-white;
+            @apply shadow-zb-glow;
+        }
+
+        &:active:not(:disabled) {
+            @apply scale-[0.98];
+        }
 
         &:disabled {
-            background: transparent !important;
+            @apply bg-white/[0.02] border-white/5 text-zb-muted;
         }
     }
 
     &:disabled {
-        @apply cursor-not-allowed;
+        @apply cursor-not-allowed opacity-50;
     }
 
     &.square {
-        @apply p-0 w-12 h-12;
+        @apply p-0 w-10 h-10;
 
         &.small {
             @apply w-8 h-8;
@@ -34,92 +44,71 @@
 }
 
 .primary {
-    @apply bg-green-600 text-green-50;
-    @apply hover:bg-green-500 active:bg-green-500 focus:ring-green-400 focus:ring-opacity-75;
+    @apply bg-zb-gradient text-white border-none shadow-zb-glow;
+    
+    &:hover:not(:disabled) {
+        @apply shadow-zb-glow-strong scale-[1.02];
+        filter: brightness(1.1);
+    }
+
+    &:active:not(:disabled) {
+        @apply scale-[0.98];
+    }
 
     &.secondary {
-        @apply hover:bg-green-600 active:bg-green-600;
+        @apply bg-transparent border border-zb-accent/50 text-zb-accent;
+        @apply hover:bg-zb-accent/10 hover:border-zb-accent;
     }
 
     &:disabled {
-        @apply bg-green-500/50 text-green-200/50;
+        @apply bg-zb-muted/30 text-white/50 shadow-none;
     }
 }
 
 .text {
-    @apply bg-slate-500 text-slate-50;
-    @apply hover:bg-slate-400 active:bg-slate-400 focus:ring-slate-300 focus:ring-opacity-50;
+    @apply bg-white/10 text-zb-text;
+    @apply hover:bg-white/20 hover:text-white active:scale-95;
 
     &.secondary {
-        @apply hover:bg-slate-500 active:bg-slate-500;
-    }
-
-    &:disabled {
-        @apply bg-slate-500/50 text-slate-200/50;
+        @apply bg-transparent text-zb-text-dim hover:text-zb-text;
     }
 }
 
 .dark {
-    @apply bg-slate-800 text-slate-50;
-    @apply hover:bg-slate-700 active:bg-slate-600 focus:ring-slate-600 focus:ring-opacity-50;
+    @apply bg-zb-card/80 border border-white/5 text-zb-text;
+    @apply hover:bg-zb-card hover:border-white/10 hover:shadow-zb-glow;
 
     &.secondary {
-        @apply hover:bg-slate-700 active:bg-slate-600;
-    }
-
-    &:disabled {
-        @apply bg-slate-700/50 text-slate-200/50;
+        @apply bg-transparent border-white/10 hover:bg-white/5;
     }
 }
 
 .danger {
-    @apply bg-red-600 text-slate-50;
-    @apply hover:bg-red-500 active:bg-red-500 focus:ring-red-400 focus:ring-opacity-75;
+    @apply bg-zb-danger text-white shadow-lg shadow-zb-danger/20;
+    @apply hover:brightness-110 hover:shadow-zb-danger/40 hover:scale-[1.02];
+    @apply active:scale-95;
 
     &.secondary {
-        @apply hover:bg-red-600 active:bg-red-600;
-    }
-
-    &:disabled {
-        @apply bg-red-600/50 text-red-50/50;
+        @apply bg-transparent border border-zb-danger/50 text-zb-danger;
+        @apply hover:bg-zb-danger/10 hover:border-zb-danger;
     }
 }
 
 .info {
-    @apply bg-blue-600 text-slate-50;
-    @apply hover:bg-blue-500 active:bg-blue-500 focus:ring-blue-400 focus:ring-opacity-75;
+    @apply bg-zb-accent/20 text-zb-accent border border-zb-accent/30 shadow-zb-glow;
+    @apply hover:bg-zb-accent/30 hover:shadow-zb-glow-strong;
 
     &.secondary {
-        @apply hover:bg-blue-600 active:bg-blue-600;
-    }
-
-    &:disabled {
-        @apply bg-blue-600/50 text-blue-50/50;
+        @apply bg-transparent border-zb-accent/40;
     }
 }
 
 .warn {
-    @apply bg-yellow-600 text-slate-50;
-    @apply hover:bg-yellow-500 active:bg-yellow-500 focus:ring-yellow-400 focus:ring-opacity-75;
-
-    &.secondary {
-        @apply hover:bg-yellow-600 active:bg-yellow-600;
-    }
-
-    &:disabled {
-        @apply bg-yellow-600/50 text-yellow-50/50;
-    }
+    @apply bg-zb-warning/20 text-zb-warning border border-zb-warning/30;
+    @apply hover:bg-zb-warning/30 hover:shadow-lg hover:shadow-zb-warning/20;
 }
 
 .success {
-    @apply bg-green-600 text-slate-50;
-    @apply hover:bg-green-500 active:bg-green-500 focus:ring-green-400 focus:ring-opacity-75;
-
-    &.secondary {
-        @apply hover:bg-green-600 active:bg-green-600;
-    }
-
-    &:disabled {
-        @apply bg-green-600/50 text-green-50/50;
-    }
+    @apply bg-zb-success/20 text-zb-success border border-zb-success/30;
+    @apply hover:bg-zb-success/30 hover:shadow-lg hover:shadow-zb-success/20;
 }
