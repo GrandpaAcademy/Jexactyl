@@ -7,6 +7,7 @@ import { PowerAction } from '@server/console/ServerConsoleContainer';
 import { Dialog } from '@/elements/dialog';
 import { PlayIcon, StopIcon, BanIcon, RefreshIcon } from '@heroicons/react/outline';
 import SaveButton from '@server/console/SaveButton';
+import classNames from 'classnames';
 
 interface PowerButtonProps {
     className?: string;
@@ -40,7 +41,7 @@ export default ({ className }: PowerButtonProps) => {
     }, [status]);
 
     return (
-        <div className={className}>
+        <div className={classNames(className, 'flex items-center gap-x-3')}>
             <Dialog.Confirm
                 open={open}
                 hideCloseIcon
@@ -51,33 +52,48 @@ export default ({ className }: PowerButtonProps) => {
             >
                 Forcibly stopping a server can lead to data corruption.
             </Dialog.Confirm>
+            <div className="flex items-center gap-x-2 bg-white/5 p-1.5 rounded-xl border border-white/5">
+                <Can action={'control.start'}>
+                    <Button.Success
+                        disabled={status !== 'offline'}
+                        onClick={onButtonClick.bind(this, 'start')}
+                        className={classNames('!px-4 !py-2 rounded-lg transition-all duration-300', status === 'offline' && 'hover:shadow-zb-glow-success/50')}
+                    >
+                        <PlayIcon className={'w-4 h-4 mr-2'} />
+                        <span className="text-xs font-bold uppercase tracking-wider">Start</span>
+                    </Button.Success>
+                </Can>
+                <Can action={'control.restart'}>
+                    <Button.Dark
+                        disabled={!status || status === 'offline'}
+                        onClick={onButtonClick.bind(this, 'restart')}
+                        className={classNames('!px-4 !py-2 rounded-lg transition-all duration-300', status && status !== 'offline' && 'hover:shadow-zb-glow-warning/30')}
+                    >
+                        <RefreshIcon className={'w-4 h-4 mr-2'} />
+                        <span className="text-xs font-bold uppercase tracking-wider">Restart</span>
+                    </Button.Dark>
+                </Can>
+                <Can action={'control.stop'}>
+                    <Button.Danger
+                        disabled={status === 'offline'}
+                        onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
+                        className={classNames('!px-4 !py-2 rounded-lg transition-all duration-300', status !== 'offline' && 'hover:shadow-zb-glow-danger/50')}
+                    >
+                        {killable ? (
+                            <>
+                                <BanIcon className={'w-4 h-4 mr-2'} />
+                                <span className="text-xs font-bold uppercase tracking-wider">Kill</span>
+                            </>
+                        ) : (
+                            <>
+                                <StopIcon className={'w-4 h-4 mr-2'} />
+                                <span className="text-xs font-bold uppercase tracking-wider">Stop</span>
+                            </>
+                        )}
+                    </Button.Danger>
+                </Can>
+            </div>
             <SaveButton />
-            <Can action={'control.start'}>
-                <Button.Success disabled={status !== 'offline'} onClick={onButtonClick.bind(this, 'start')}>
-                    <PlayIcon className={'w-5 mr-1'} /> Start
-                </Button.Success>
-            </Can>
-            <Can action={'control.restart'}>
-                <Button.Dark disabled={!status} onClick={onButtonClick.bind(this, 'restart')}>
-                    <RefreshIcon className={'w-5 mr-1'} /> Restart
-                </Button.Dark>
-            </Can>
-            <Can action={'control.stop'}>
-                <Button.Danger
-                    disabled={status === 'offline'}
-                    onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
-                >
-                    {killable ? (
-                        <>
-                            <BanIcon className={'w-5 mr-1'} /> Kill
-                        </>
-                    ) : (
-                        <>
-                            <StopIcon className={'w-5 mr-1'} /> Stop
-                        </>
-                    )}
-                </Button.Danger>
-            </Can>
         </div>
     );
 };

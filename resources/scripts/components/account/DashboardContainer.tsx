@@ -74,16 +74,16 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={`Welcome to ${name}`} header description={`Signed in as ${user.email}`}>
+        <PageContentBlock title={`Welcome to ${name}`} header description={`Logged in as ${user.email}`}>
             <DashboardAlert />
             {open && <ServerGroupDialog open={open} setOpen={setOpen} groups={groups} setGroups={setGroups} />}
             <FlashMessageRender className={'my-4'} byKey={'dashboard'} />
-            <div className={classNames('grid gap-4', activityEnabled ? 'lg:grid-cols-3' : 'lg:grid-cols-2')}>
+            <div className={classNames('grid gap-6', activityEnabled ? 'lg:grid-cols-3' : 'lg:grid-cols-2')}>
                 <div className="relative overflow-x-auto lg:col-span-2">
-                    <h2 css={tw`text-neutral-300 mb-4 px-4 text-2xl flex justify-between`}>
-                        <div className={'inline-flex'}>
+                    <h2 css={tw`text-zb-text mb-6 pl-4 text-2xl font-bold tracking-tight flex justify-between items-center`}>
+                        <div className={'inline-flex items-center gap-x-4'}>
                             {user.rootAdmin && (
-                                <div className={'mr-3 mt-1.5'}>
+                                <div className={'mt-1'}>
                                     <Switch
                                         name={'show_all_servers'}
                                         defaultChecked={showOnlyAdmin}
@@ -91,91 +91,100 @@ export default () => {
                                     />
                                 </div>
                             )}
-                            {showOnlyAdmin ? 'Other' : 'Your'} Servers
+                            <span className="bg-zb-gradient bg-clip-text text-transparent">
+                                {showOnlyAdmin ? 'Administrative' : 'Your'} Servers
+                            </span>
                         </div>
                         <Button.Text
                             size={Button.Sizes.Small}
-                            className={'mt-1'}
+                            className={'!p-2 shadow-zb-glow-sm'}
                             onClick={() => setOpen({ open: 'index' })}
                         >
                             <FontAwesomeIcon icon={faList} />
                         </Button.Text>
                     </h2>
-                    <ContentBox>
+                    <div className="space-y-4">
                         {!servers || servers.items.length < 1 ? (
-                            <div className={'text-gray-400'}>
-                                <div className={'grid lg:grid-cols-2 gap-6 m-4'}>
-                                    <ServerSvg color={colors.primary} />
-                                    <div>
-                                        <h1 className={'text-gray-200 text-2xl font-bold'}>Deploy your first server</h1>
-                                        <div className={'mt-2'}>
-                                            It looks like you have no servers deployed to your account.&nbsp;
-                                            {billing ? (
-                                                <>
-                                                    With our billing portal, you can configure and purchase a new server
-                                                    plan and choose options like amount of CPU, memory and which game
-                                                    you&apos;d like to run.
-                                                    <div className={'text-right'}>
-                                                        <Link to={'/account/billing/order'}>
-                                                            <Button className={'w-1/2 text-white font-normal'}>
-                                                                View Options{' '}
-                                                                <FontAwesomeIcon
-                                                                    icon={faCircleArrowRight}
-                                                                    className={'ml-2'}
-                                                                />
-                                                            </Button>
-                                                        </Link>
+                            <ContentBox>
+                                <div className={'text-zb-text-dim'}>
+                                    <div className={'grid lg:grid-cols-2 gap-8 m-4 items-center'}>
+                                        <div className="opacity-80 scale-90">
+                                            <ServerSvg color="var(--zb-accent)" />
+                                        </div>
+                                        <div>
+                                            <h1 className={'text-zb-text text-3xl font-extrabold tracking-tight'}>Deploy your first server</h1>
+                                            <div className={'mt-4 text-zb-muted font-medium leading-relaxed'}>
+                                                It looks like you have no servers deployed to your account.&nbsp;
+                                                {billing ? (
+                                                    <div className="mt-6">
+                                                        With our billing portal, you can configure and purchase a new server
+                                                        plan and choose options like amount of CPU, memory and which game
+                                                        you&apos;d like to run.
+                                                        <div className={'mt-8'}>
+                                                            <Link to={'/account/billing/order'}>
+                                                                <Button className={'px-8 py-3'}>
+                                                                    View Options{' '}
+                                                                    <FontAwesomeIcon
+                                                                        icon={faCircleArrowRight}
+                                                                        className={'ml-2'}
+                                                                    />
+                                                                </Button>
+                                                            </Link>
+                                                        </div>
                                                     </div>
-                                                </>
-                                            ) : (
-                                                <>Think this is a mistake? Please contact our support team.</>
-                                            )}
+                                                ) : (
+                                                    <div className="mt-4 p-4 border-l-2 border-zb-accent/30 bg-zb-accent/5">
+                                                        Think this is a mistake? Please contact our support team.
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </ContentBox>
                         ) : (
                             <Pagination data={servers} onPageSelect={setPage}>
                                 {({ items }) =>
                                     items.length > 0 ? (
-                                        items.map((server, _index) => (
-                                            <>
-                                                <ServerRow
-                                                    key={server.uuid}
-                                                    server={server}
-                                                    setOpen={setOpen}
-                                                    group={groups.find(x => x.id === server.groupId)}
-                                                />
-                                            </>
+                                        items.map((server) => (
+                                            <ServerRow
+                                                key={server.uuid}
+                                                server={server}
+                                                setOpen={setOpen}
+                                                group={groups.find(x => x.id === server.groupId)}
+                                            />
                                         ))
                                     ) : (
-                                        <div className={'w-full'} style={{ backgroundColor: colors.secondary }}>
-                                            <div className={'px-6 py-4 text-gray-300'}>
-                                                <div css={tw`flex justify-center`}>
-                                                    <div
-                                                        css={tw`w-full sm:w-3/4 md:w-1/2 rounded-lg text-center relative`}
-                                                    >
-                                                        <img
-                                                            src={NotFoundSvg}
-                                                            css={tw`w-2/3 h-auto select-none mx-auto`}
-                                                        />
-                                                        <h2 css={tw`mt-10 mb-6 text-white font-medium text-xl`}>
-                                                            No servers could be found.
-                                                        </h2>
+                                        <ContentBox>
+                                            <div className={'w-full py-12'}>
+                                                <div className={'px-6 text-zb-muted'}>
+                                                    <div css={tw`flex justify-center`}>
+                                                        <div css={tw`w-full sm:w-3/4 md:w-1/2 rounded-lg text-center relative`}>
+                                                            <img
+                                                                src={NotFoundSvg}
+                                                                css={tw`w-1/2 h-auto select-none mx-auto opacity-40 grayscale`}
+                                                            />
+                                                            <h2 css={tw`mt-8 text-zb-text font-bold text-2xl tracking-tight`}>
+                                                                No servers found.
+                                                            </h2>
+                                                            <p className="mt-2 text-zb-muted">Try adjusting your filters or groups.</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </ContentBox>
                                     )
                                 }
                             </Pagination>
                         )}
-                    </ContentBox>
+                    </div>
                 </div>
                 {activityEnabled && (
-                    <ContentBox title={'Account Activity'}>
-                        <ActivityLogContainer />
-                    </ContentBox>
+                    <div className="space-y-6">
+                        <ContentBox title={'Recent Activity'}>
+                            <ActivityLogContainer />
+                        </ContentBox>
+                    </div>
                 )}
             </div>
         </PageContentBlock>

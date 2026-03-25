@@ -1,4 +1,4 @@
-# Jexpanel (formerly Jexactyl)
+# Zero-Bot.net (inharited from Jexactyl)
 
 [![Latest Release](https://img.shields.io/github/v/release/Jexactyl/Jexactyl?style=for-the-badge)](https://github.com/Jexactyl/Jexactyl/releases)
 [![Stars](https://img.shields.io/github/stars/Jexactyl/Jexactyl?style=for-the-badge)](https://github.com/Jexactyl/Jexactyl/stargazers)
@@ -14,15 +14,15 @@ Jexpanel is a modern, high-performance **game server management panel** built on
 
 ## Features
 
-- Advanced authentication and security setups  
-- Integrated billing system (Stripe + PayPal)  
-- Clean, user-friendly administrative interface  
-- Built with modern tech: PHP, Laravel, TypeScript, React, Docker  
+- Advanced authentication and security setups
+- Integrated billing system (Stripe + PayPal)
+- Clean, user-friendly administrative interface
+- Built with modern tech: PHP, Laravel, TypeScript, React, Docker
 - Fully open-source, community-driven
 
 ## Useful Links
 
-- Website & Documentation: [jexpanel.com](https://jexpanel.com)  
+- Website & Documentation: [jexpanel.com](https://jexpanel.com)
 - GitHub Repository: [Jexactyl/Jexactyl](https://github.com/Jexactyl/Jexactyl)
 - Discord: [discord.com/jexpanel](https://discord.gg/qttGR4Z5Pk)
 

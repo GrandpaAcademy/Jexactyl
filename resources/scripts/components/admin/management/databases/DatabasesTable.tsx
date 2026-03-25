@@ -11,15 +11,12 @@ import AdminTable, {
 } from '@/elements/AdminTable';
 import CopyOnClick from '@/elements/CopyOnClick';
 import useFlash from '@/plugins/useFlash';
-import { useStoreState } from 'easy-peasy';
 import { useContext, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import tw from 'twin.macro';
 import { Context as DatabasesContext } from '@/api/routes/admin/databases/getDatabases';
 import DatabaseStatus from './DatabaseStatus';
 
 export default () => {
-    const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(DatabasesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: databases, error, isValidating } = getDatabases();
@@ -50,8 +47,8 @@ export default () => {
         <AdminTable>
             <ContentWrapper onSearch={onSearch}>
                 <Pagination data={databases} onPageSelect={setPage}>
-                    <div css={tw`overflow-x-auto`}>
-                        <table css={tw`w-full table-auto`}>
+                    <div className="overflow-x-auto no-scrollbar">
+                        <table className="w-full border-separate border-spacing-y-2">
                             <TableHead>
                                 <TableHeader
                                     name={'ID'}
@@ -63,9 +60,9 @@ export default () => {
                                     direction={sort === 'name' ? (sortDirection ? 1 : 2) : null}
                                     onClick={() => setSort('name')}
                                 />
-                                <TableHeader name={'Address'} />
-                                <TableHeader name={'Username'} />
-                                <TableHeader name={'Status'} />
+                                <TableHeader name={'Remote Address'} />
+                                <TableHeader name={'Administrative User'} />
+                                <TableHeader name={'Connectivity Status'} />
                             </TableHead>
 
                             <TableBody>
@@ -74,37 +71,36 @@ export default () => {
                                     !isValidating &&
                                     length > 0 &&
                                     databases.items.map(database => (
-                                        <TableRow key={database.id}>
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                        <TableRow key={database.id} className="group bg-zb-card/30 backdrop-blur-md hover:bg-white/5 transition-all duration-300">
+                                            <td className="px-6 py-4 text-sm first:rounded-l-2xl">
                                                 <CopyOnClick text={database.id.toString()}>
-                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                    <code className="font-mono bg-black/40 text-zb-accent px-2 py-1 rounded-md border border-white/5 group-hover:border-zb-accent/30 transition-colors uppercase">
                                                         {database.id}
                                                     </code>
                                                 </CopyOnClick>
                                             </td>
 
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <td className="px-6 py-4 text-sm font-medium">
                                                 <NavLink
                                                     to={`/admin/databases/${database.id}`}
-                                                    style={{ color: colors.primary }}
-                                                    className={'hover:brightness-125 duration-300'}
+                                                    className="text-neutral-100 hover:text-zb-accent transition-colors duration-300"
                                                 >
                                                     {database.name}
                                                 </NavLink>
                                             </td>
 
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <td className="px-6 py-4 text-sm">
                                                 <CopyOnClick text={database.getAddress()}>
-                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                    <code className="font-mono bg-black/40 text-neutral-400 group-hover:text-zb-accent px-2 py-1 rounded-md border border-white/5 transition-colors">
                                                         {database.getAddress()}
                                                     </code>
                                                 </CopyOnClick>
                                             </td>
 
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <td className="px-6 py-4 text-sm text-neutral-400">
                                                 {database.username}
                                             </td>
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <td className="px-6 py-4 last:rounded-r-2xl">
                                                 <DatabaseStatus database={database.getAddress()} />
                                             </td>
                                         </TableRow>

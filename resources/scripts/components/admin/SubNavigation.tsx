@@ -1,31 +1,13 @@
-import { useStoreState } from '@/state/hooks';
 import classNames from 'classnames';
 import type { ComponentType, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import tw, { styled } from 'twin.macro';
-import { SiteTheme } from '@/state/theme';
-
-const StyledSubNavigation = styled.div<{ $theme: SiteTheme }>`
-    ${tw`flex flex-row items-center flex-shrink-0 h-12 mb-4 border-b border-neutral-700 overflow-x-auto`};
-
-    & > a {
-        ${tw`flex flex-row items-center h-full px-4 border-b text-base whitespace-nowrap border-transparent`};
-
-        & > svg {
-            ${tw`w-6 h-6 mr-2`};
-        }
-
-        &:active,
-        &.active {
-            color: ${({ $theme }) => $theme.colors.primary};
-            border-color: ${({ $theme }) => $theme.colors.primary};
-        }
-    }
-`;
 
 export const SubNavigation = ({ children }: { children: ReactNode }) => {
-    const theme = useStoreState(state => state.theme.data!);
-    return <StyledSubNavigation $theme={theme}>{children}</StyledSubNavigation>;
+    return (
+        <div className="flex flex-row items-center gap-2 mb-8 border-b border-white/5 overflow-x-auto no-scrollbar pb-1">
+            {children}
+        </div>
+    );
 };
 
 interface Props {
@@ -53,8 +35,18 @@ export const SubNavigationLink = ({
     children,
     disabled,
 }: PropsWithIcon | PropsWithoutIcon) => (
-    <NavLink to={to} end={base} className={classNames(disabled ? 'text-gray-500' : 'text-neutral-300')}>
-        {IconComponent ? <IconComponent /> : children}
+    <NavLink 
+        to={to} 
+        end={base} 
+        className={({ isActive }) => classNames(
+            'flex items-center gap-2 px-5 py-2.5 rounded-t-xl transition-all duration-300 border-b-2 whitespace-nowrap text-sm font-medium tracking-wide uppercase',
+            disabled ? 'opacity-50 pointer-events-none' : 'hover:bg-white/5',
+            isActive 
+                ? 'text-zb-accent border-zb-accent bg-zb-accent/5 shadow-[0_4px_12px_-4px_rgba(0,240,255,0.2)]' 
+                : 'text-neutral-400 border-transparent hover:text-neutral-200'
+        )}
+    >
+        {IconComponent ? <div className="w-5 h-5"><IconComponent /></div> : children}
         {name}
     </NavLink>
 );

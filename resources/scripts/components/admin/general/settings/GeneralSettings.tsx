@@ -1,5 +1,4 @@
 import { Form, Formik } from 'formik';
-import tw from 'twin.macro';
 
 import AdminBox from '@/elements/AdminBox';
 import Field from '@/elements/Field';
@@ -62,116 +61,118 @@ export default () => {
             }}
         >
             <Form>
-                <FlashMessageRender byKey={'settings:general'} className={'mb-2'} />
-                <div css={tw`grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6`}>
-                    <AdminBox title={'Application Name'} icon={faPaintBrush}>
-                        <Field id={'name'} name={'name'} type={'text'} description={''} />
-                        <p className={'text-gray-400 text-xs mt-1.5'}>
+                <FlashMessageRender byKey={'settings:general'} className="mb-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <AdminBox title="Application Name" icon={faPaintBrush}>
+                        <Field id="name" name="name" type="text" />
+                        <p className="text-zb-text-dim text-[11px] mt-3 leading-relaxed">
                             Configure the name of this Panel to suit your needs.
                         </p>
                     </AdminBox>
-                    <AdminBox title={'Application Logo'} icon={faImage}>
-                        <Field id={'logo'} name={'logo'} type={'url'} description={''} />
-                        <p className={'text-gray-400 text-xs mt-1.5'}>
+
+                    <AdminBox title="Application Logo" icon={faImage}>
+                        <Field id="logo" name="logo" type="url" />
+                        <p className="text-zb-text-dim text-[11px] mt-3 leading-relaxed">
                             Configure the logo of this Panel to suit your needs.
                         </p>
                     </AdminBox>
-                    <AdminBox title={'Automatic Updates'} icon={faRecycle}>
-                        <div>
-                            <div className={'inline-flex'}>
-                                <Label className={'mt-1 mr-2'}>Allow Automatic Updates?</Label>
+
+                    <AdminBox title="Automatic Updates" icon={faRecycle}>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <Label className="mb-0 text-sm">Allow Automatic Updates?</Label>
                                 <Field
-                                    id={'auto_update'}
-                                    name={'auto_update'}
-                                    type={'checkbox'}
+                                    id="auto_update"
+                                    name="auto_update"
+                                    type="checkbox"
                                     defaultChecked={settings.auto_update}
                                 />
                             </div>
-                            <p className={'text-gray-400 text-xs mt-1.5'}>
-                                If enabled, Jexactyl will automatically update in order to keep your system secure and
+                            <p className="text-zb-text-dim text-[11px] leading-relaxed">
+                                If enabled, Zero-Bot will automatically update in order to keep your system secure and
                                 introduce new features.
                             </p>
                         </div>
                     </AdminBox>
-                    <AdminBox title={'Admin Indicators'} icon={faShapes}>
-                        <div>
-                            <div className={'inline-flex'}>
-                                <Label className={'mt-1 mr-2'}>Show admin indicators?</Label>
+
+                    <AdminBox title="Admin Indicators" icon={faShapes}>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <Label className="mb-0 text-sm">Show admin indicators?</Label>
                                 <Field
-                                    id={'indicators'}
-                                    name={'indicators'}
-                                    type={'checkbox'}
+                                    id="indicators"
+                                    name="indicators"
+                                    type="checkbox"
                                     defaultChecked={settings.indicators}
                                 />
                             </div>
-                            <p className={'text-gray-400 text-xs mt-1.5'}>
-                                If enabled, small boxes will appear in the top-right of the UI indicating whether
-                                Jexactyl modules are enabled/disabled. Only on large screens.
+                            <p className="text-zb-text-dim text-[11px] leading-relaxed">
+                                If enabled, small boxes will appear in the top-right of the UI indicating module status. Only visible on workstations.
                             </p>
                         </div>
                     </AdminBox>
-                    <AdminBox title={'Speed Dial'} icon={faPlusCircle}>
-                        <div>
-                            <div className={'inline-flex'}>
-                                <Label className={'mt-1 mr-2'}>Show speed dial component?</Label>
+
+                    <AdminBox title="Speed Dial" icon={faPlusCircle}>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <Label className="mb-0 text-sm">Show speed dial?</Label>
                                 <Field
-                                    id={'speed_dial'}
-                                    name={'speed_dial'}
-                                    type={'checkbox'}
+                                    id="speed_dial"
+                                    name="speed_dial"
+                                    type="checkbox"
                                     defaultChecked={settings.speed_dial}
                                 />
                             </div>
-                            <p className={'text-gray-400 text-xs mt-1.5'}>
-                                If enabled, a component will show to admins in the client-side UI for quick actions -
-                                such as creating a server or user.
+                            <p className="text-zb-text-dim text-[11px] leading-relaxed">
+                                If enabled, a component will show to admins in the client-side UI for quick actions like creating servers.
                             </p>
                         </div>
                     </AdminBox>
-                    <AdminBox title={'Activity Logging'} icon={faEye}>
-                        <div>
-                            <div className={'bg-black/50 rounded-lg p-2 grid lg:grid-cols-3 gap-4 place-items-center'}>
-                                <div className={'inline-flex'}>
-                                    <Label className={'mt-1 mr-2'}>Account</Label>
+
+                    <AdminBox title="Activity Logging" icon={faEye}>
+                        <div className="space-y-4">
+                            <div className="bg-white/5 border border-white/5 rounded-xl p-4 grid grid-cols-3 gap-2">
+                                <div className="flex flex-col items-center gap-2">
+                                    <Label className="mb-0 text-[10px] uppercase opacity-50">Account</Label>
                                     <Field
-                                        id={'activity.enabled.account'}
-                                        name={'activity.enabled.account'}
-                                        type={'checkbox'}
+                                        id="activity.enabled.account"
+                                        name="activity.enabled.account"
+                                        type="checkbox"
                                         defaultChecked={settings.activity.enabled.account}
                                     />
                                 </div>
-                                <div className={'inline-flex'}>
-                                    <Label className={'mt-1 mr-2'}>Server</Label>
+                                <div className="flex flex-col items-center gap-2">
+                                    <Label className="mb-0 text-[10px] uppercase opacity-50">Server</Label>
                                     <Field
-                                        id={'activity.enabled.server'}
-                                        name={'activity.enabled.server'}
-                                        type={'checkbox'}
+                                        id="activity.enabled.server"
+                                        name="activity.enabled.server"
+                                        type="checkbox"
                                         defaultChecked={settings.activity.enabled.server}
                                     />
                                 </div>
-                                <div className={'inline-flex'}>
-                                    <Label className={'mt-1 mr-2'}>Admin</Label>
+                                <div className="flex flex-col items-center gap-2">
+                                    <Label className="mb-0 text-[10px] uppercase opacity-50">Admin</Label>
                                     <Field
-                                        id={'activity.enabled.admin'}
-                                        name={'activity.enabled.admin'}
-                                        type={'checkbox'}
+                                        id="activity.enabled.admin"
+                                        name="activity.enabled.admin"
+                                        type="checkbox"
                                         defaultChecked={settings.activity.enabled.admin}
                                     />
                                 </div>
                             </div>
-                            <p className={'text-gray-400 text-xs mt-1.5'}>
-                                Check the boxes you wish to log activity for. By default, all of these are enabled.
+                            <p className="text-zb-text-dim text-[11px] leading-relaxed">
+                                Select the areas where activity logging should be enabled. Recommended to keep all active.
                             </p>
                         </div>
                     </AdminBox>
                 </div>
-                <div css={tw`w-full flex flex-row items-center mt-6`}>
-                    <div css={tw`flex text-xs text-gray-500`}>
-                        These changes may not apply until users refresh the page.
-                    </div>
-
-                    <div css={tw`flex ml-auto`}>
-                        <Button type="submit">Save Changes</Button>
-                    </div>
+                <div className="w-full flex flex-col md:flex-row items-center mt-12 gap-6 bg-white/5 border border-white/5 p-6 rounded-2xl backdrop-blur-sm">
+                    <p className="text-neutral-500 text-xs italic flex-grow">
+                        * Note: Some changes may require a page refresh to take full effect.
+                    </p>
+                    <Button type="submit" className="w-full md:w-auto shadow-zb-glow-sm/20 px-10">
+                        Save Configuration
+                    </Button>
                 </div>
             </Form>
         </Formik>

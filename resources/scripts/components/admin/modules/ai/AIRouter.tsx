@@ -17,17 +17,17 @@ export default () => {
     if (settings.enabled && !settings.key) return <ConfigureAI />;
 
     return (
-        <AdminContentBlock title={'Jexactyl AI'}>
+        <AdminContentBlock title={'Zero-Bot AI'}>
             <FlashMessageRender byKey={'admin:ai'} className={'mb-4'} />
             <div className={'w-full flex flex-row items-center mb-8'}>
                 <div className={'flex flex-col flex-shrink'} style={{ minWidth: '0' }}>
-                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Jexactyl AI</h2>
+                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Zero-Bot AI</h2>
                     <p
                         className={
                             'hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden'
                         }
                     >
-                        Use Artificial Intelligence to add more power to Jexactyl.
+                        Use Artificial Intelligence to add more power to Zero-Bot.
                     </p>
                 </div>
             </div>

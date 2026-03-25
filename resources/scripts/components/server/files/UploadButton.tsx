@@ -1,7 +1,6 @@
 import { CloudUploadIcon } from '@heroicons/react/outline';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import tw from 'twin.macro';
 import { getFileUploadUrl } from '@/api/routes/server/files';
 import { Button } from '@/elements/button/index';
 import { ModalMask } from '@/elements/Modal';
@@ -121,12 +120,12 @@ export default ({ className }: { className?: string }) => {
                         <div className={'pointer-events-none flex w-full items-center justify-center'}>
                             <div
                                 className={
-                                    'mx-10 flex w-full max-w-sm items-center space-x-4 rounded bg-black p-6 ring-4 ring-blue-200 ring-opacity-60'
+                                    'mx-10 flex w-full max-w-sm items-center space-x-4 rounded-2xl bg-zb-card/60 backdrop-blur-2xl p-8 border-2 border-dashed border-zb-accent/50 shadow-zb-glow-md'
                                 }
                             >
-                                <CloudUploadIcon className={'h-10 w-10 flex-shrink-0'} />
-                                <p className={'flex-1 text-center font-header text-lg text-neutral-100'}>
-                                    Drag and drop files to upload.
+                                <CloudUploadIcon className={'h-12 w-12 flex-shrink-0 text-zb-accent animate-bounce'} />
+                                <p className={'flex-1 text-center font-bold text-lg text-zb-text drop-shadow-sm'}>
+                                    Drop files to start uploading.
                                 </p>
                             </div>
                         </div>
@@ -136,7 +135,7 @@ export default ({ className }: { className?: string }) => {
             <input
                 type={'file'}
                 ref={fileUploadInput}
-                css={tw`hidden`}
+                className="hidden"
                 onChange={e => {
                     if (!e.currentTarget.files) return;
 

@@ -3,7 +3,6 @@ import { languages } from '@codemirror/language-data';
 import { dirname } from 'pathe';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import tw from 'twin.macro';
 
 import { httpErrorToHuman } from '@/api/http';
 import { getFileContents, saveFileContents } from '@/api/routes/server/files';
@@ -97,22 +96,22 @@ export default () => {
 
     return (
         <PageContentBlock>
-            <FlashMessageRender byKey={'files:view'} css={tw`mb-4`} />
+            <FlashMessageRender byKey={'files:view'} className="mb-4" />
 
             <ErrorBoundary>
-                <div css={tw`mb-4`}>
+                <div className="mb-4">
                     <FileManagerBreadcrumbs withinFileEditor isNewFile={action !== 'edit'} />
                 </div>
             </ErrorBoundary>
 
             {filename === '.pteroignore' ? (
-                <div css={tw`mb-4 p-4 border-l-4 bg-neutral-900 rounded border-cyan-400`}>
-                    <p css={tw`text-neutral-300 text-sm`}>
-                        You&apos;re editing a <code css={tw`font-mono bg-black rounded py-px px-1`}>.pteroignore</code>{' '}
+                <div className="mb-4 p-4 border-l-4 bg-zb-card/40 backdrop-blur-xl rounded-xl border-zb-accent shadow-zb-glow-sm/20">
+                    <p className="text-zb-text-dim text-sm leading-relaxed">
+                        You&apos;re editing a <code className="font-mono bg-white/5 border border-white/10 rounded-lg py-1 px-2 text-zb-accent">.pteroignore</code>{' '}
                         file. Any files or directories listed in here will be excluded from backups. Wildcards are
-                        supported by using an asterisk (<code css={tw`font-mono bg-black rounded py-px px-1`}>*</code>).
+                        supported by using an asterisk (<code className="font-mono bg-white/5 border border-white/10 rounded-lg py-1 px-2 text-zb-accent">*</code>).
                         You can negate a prior rule by prepending an exclamation point (
-                        <code css={tw`font-mono bg-black rounded py-px px-1`}>!</code>).
+                        <code className="font-mono bg-white/5 border border-white/10 rounded-lg py-1 px-2 text-zb-accent">!</code>).
                     </p>
                 </div>
             ) : null}
@@ -126,33 +125,36 @@ export default () => {
                 }}
             />
 
-            <div css={tw`relative`}>
+            <div className="relative group">
                 <SpinnerOverlay visible={loading} />
-                <Editor
-                    style={{ height: 'calc(100vh - 20rem)' }}
-                    childClassName={tw`rounded-md h-full`}
-                    filename={filename}
-                    initialContent={content}
-                    language={language}
-                    onLanguageChanged={l => {
-                        setLanguage(l);
-                    }}
-                    fetchContent={value => {
-                        fetchFileContent = value;
-                    }}
-                    onContentSaved={() => {
-                        if (action !== 'edit') {
-                            setModalVisible(true);
-                        } else {
-                            save();
-                        }
-                    }}
-                />
+                <div className="bg-zb-card/30 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden transition-all duration-300 group-hover:border-white/10 shadow-2xl">
+                    <Editor
+                        style={{ height: 'calc(100vh - 22rem)' }}
+                        childClassName="h-full"
+                        filename={filename}
+                        initialContent={content}
+                        language={language}
+                        onLanguageChanged={l => {
+                            setLanguage(l);
+                        }}
+                        fetchContent={value => {
+                            fetchFileContent = value;
+                        }}
+                        onContentSaved={() => {
+                            if (action !== 'edit') {
+                                setModalVisible(true);
+                            } else {
+                                save();
+                            }
+                        }}
+                    />
+                </div>
             </div>
 
-            <div css={tw`flex justify-end mt-4`}>
-                <div css={tw`flex-1 sm:flex-none rounded bg-neutral-900 mr-4`}>
+            <div className="flex flex-col sm:flex-row justify-end items-center mt-6 gap-4">
+                <div className="w-full sm:w-auto rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-300">
                     <Select
+                        className="bg-transparent border-none text-zb-text-dim py-2.5 px-4"
                         value={language?.name ?? ''}
                         onChange={e => {
                             setLanguage(languages.find(l => l.name === e.target.value));
@@ -166,19 +168,21 @@ export default () => {
                     </Select>
                 </div>
 
-                {action === 'edit' ? (
-                    <Can action={'file.update'}>
-                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => save()}>
-                            Save Content
-                        </Button>
-                    </Can>
-                ) : (
-                    <Can action={'file.create'}>
-                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => setModalVisible(true)}>
-                            Create File
-                        </Button>
-                    </Can>
-                )}
+                <div className="flex w-full sm:w-auto gap-4">
+                    {action === 'edit' ? (
+                        <Can action={'file.update'}>
+                            <Button className="flex-1 sm:flex-none shadow-zb-glow-sm/20" onClick={() => save()}>
+                                Save Changes
+                            </Button>
+                        </Can>
+                    ) : (
+                        <Can action={'file.create'}>
+                            <Button className="flex-1 sm:flex-none shadow-zb-glow-sm/20" onClick={() => setModalVisible(true)}>
+                                Create File
+                            </Button>
+                        </Can>
+                    )}
+                </div>
             </div>
         </PageContentBlock>
     );

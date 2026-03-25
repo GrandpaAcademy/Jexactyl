@@ -26,33 +26,34 @@ import { ArrowsExpandIcon } from '@heroicons/react/outline';
 import IntelligenceButton from './IntelligenceButton';
 
 const theme: ITheme = {
-    background: '#000000',
-    cursor: 'transparent',
-    black: th`colors.black`.toString(),
-    red: '#E54B4B',
-    green: '#9ECE58',
-    yellow: '#FAED70',
-    blue: '#396FE2',
-    magenta: '#BB80B3',
-    cyan: '#2DDAFD',
-    white: '#d0d0d0',
-    brightBlack: 'rgba(255, 255, 255, 0.2)',
-    brightRed: '#FF5370',
-    brightGreen: '#C3E88D',
-    brightYellow: '#FFCB6B',
-    brightBlue: '#82AAFF',
-    brightMagenta: '#C792EA',
-    brightCyan: '#89DDFF',
-    brightWhite: '#ffffff',
-    selectionBackground: '#FAF089',
+    background: '#0A0E17',
+    cursor: '#00F0FF',
+    black: '#0A0E17',
+    red: '#EF4444',
+    green: '#10B981',
+    yellow: '#F59E0B',
+    blue: '#3B82F6',
+    magenta: '#7C3AED',
+    cyan: '#00F0FF',
+    white: '#D1D5DB',
+    brightBlack: '#4B5563',
+    brightRed: '#F87171',
+    brightGreen: '#34D399',
+    brightYellow: '#FBBF24',
+    brightBlue: '#60A5FA',
+    brightMagenta: '#A78BFA',
+    brightCyan: '#22D3EE',
+    brightWhite: '#F9FAFB',
+    selectionBackground: 'rgba(0, 240, 255, 0.3)',
 };
 
 const terminalProps: ITerminalOptions = {
     disableStdin: true,
-    cursorStyle: 'underline',
+    cursorStyle: 'block',
+    cursorBlink: true,
     allowTransparency: true,
-    fontSize: 12,
-    fontFamily: th('fontFamily.mono'),
+    fontSize: 13,
+    fontFamily: '"JetBrains Mono", "Roboto Mono", monospace',
     theme: theme,
     allowProposedApi: true,
 };
@@ -64,11 +65,10 @@ interface Props {
 
 export default ({ expand, setExpand }: Props) => {
     const terminalInitOnlyProps: ITerminalInitOnlyOptions = {
-        rows: expand ? 45 : 30,
+        rows: expand ? 45 : 25,
     };
 
-    const { secondary } = useStoreState(state => state.theme.data!.colors);
-    const TERMINAL_PRELUDE = '\n\u001b[1m\u001b[33mEverest Container: \u001b[0m';
+    const TERMINAL_PRELUDE = '\n\u001b[1m\u001b[36mZero-Bot \u001b[37m» \u001b[0m';
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps, ...terminalInitOnlyProps }), []);
     const fitAddon = new FitAddon();
@@ -83,10 +83,14 @@ export default ({ expand, setExpand }: Props) => {
     const [history, setHistory] = usePersistedState<string[]>(`${serverId}:command_history`, []);
     const [historyIndex, setHistoryIndex] = useState(-1);
 
-    // SearchBarAddon has hardcoded z-index: 999 :(
     const zIndex = `
     .xterm-search-bar__addon {
         z-index: 10;
+        background: rgba(26, 31, 46, 0.8) !important;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff !important;
     }`;
 
     const handleConsoleOutput = (line: string, prelude = false) =>
@@ -94,20 +98,19 @@ export default ({ expand, setExpand }: Props) => {
 
     const handleTransferStatus = (status: string) => {
         switch (status) {
-            // Sent by either the source or target node if a failure occurs.
             case 'failure':
-                terminal.writeln(TERMINAL_PRELUDE + 'Transfer has failed.\u001b[0m\n');
+                terminal.writeln(TERMINAL_PRELUDE + '\u001b[31mTransfer has failed.\u001b[0m\n');
                 return;
         }
     };
 
     const handleDaemonErrorOutput = (line: string) =>
         terminal.writeln(
-            TERMINAL_PRELUDE + '\u001b[1m\u001b[41m' + line.replace(/(?:\r\n|\r|\n)$/im, '') + '\u001b[0m\n',
+            TERMINAL_PRELUDE + '\u001b[1m\u001b[31m' + line.replace(/(?:\r\n|\r|\n)$/im, '') + '\u001b[0m\n',
         );
 
     const handlePowerChangeEvent = (state: string) =>
-        terminal.writeln(TERMINAL_PRELUDE + 'Server marked as ' + state + '...\u001b[0m\n');
+        terminal.writeln(TERMINAL_PRELUDE + 'Server marked as \u001b[33m' + state + '\u001b[0m...\n');
 
     const handleCommandKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'ArrowUp') {
@@ -115,9 +118,6 @@ export default ({ expand, setExpand }: Props) => {
 
             setHistoryIndex(newIndex);
             e.currentTarget.value = history![newIndex] || '';
-
-            // By default, up arrow will also bring the cursor to the start of the line,
-            // so we'll preventDefault to keep it at the end.
             e.preventDefault();
         }
 
@@ -150,7 +150,6 @@ export default ({ expand, setExpand }: Props) => {
             fitAddon.fit();
             searchBar.addNewStyle(zIndex);
 
-            // Add support for capturing keys
             terminal.attachCustomKeyEventHandler((e: KeyboardEvent) => {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
                     document.execCommand('copy');
@@ -188,7 +187,6 @@ export default ({ expand, setExpand }: Props) => {
         };
 
         if (connected && instance) {
-            // Do not clear the console if the server is being transferred.
             if (!isTransferring) {
                 terminal.clear();
             }
@@ -220,30 +218,28 @@ export default ({ expand, setExpand }: Props) => {
 
     return (
         <div
-            style={{ backgroundColor: secondary }}
             className={classNames(
-                styles.terminal,
-                'relative p-2 rounded-lg',
-                expand ? 'min-h-[48rem]' : 'min-h-[16rem]',
+                'relative w-full rounded-2xl bg-zb-card/30 backdrop-blur-xl border border-white/5 shadow-2xl overflow-hidden transition-all duration-500',
+                expand ? 'min-h-[48rem]' : 'min-h-[20rem]',
             )}
         >
             <SpinnerOverlay visible={!connected} size={'large'} />
             <div
-                className={classNames(styles.container, styles.overflows_container, { 'rounded-b': !canSendCommands })}
+                className={classNames(styles.container, styles.overflows_container, { 'rounded-b': !canSendCommands }, 'p-4')}
             >
                 <div className={'h-full static'}>
-                    <div className={'absolute top-0 right-0 p-5 z-10'}>
+                    <div className={'absolute top-0 right-0 p-6 z-10'}>
                         <IntelligenceButton />
                     </div>
-                    <div id={styles.terminal} ref={ref} />
+                    <div id={styles.terminal} ref={ref} className="rounded-xl overflow-hidden" />
                 </div>
             </div>
             {canSendCommands && (
-                <div className={classNames('relative', styles.overflows_container)}>
+                <div className={'relative bg-white/5 border-t border-white/5 font-mono'}>
                     <input
-                        className={classNames('peer', styles.command_input)}
+                        className={'w-full bg-transparent border-none text-zb-text-dim px-12 py-4 focus:ring-0 placeholder:text-zb-muted/50 text-sm transition-all duration-300 focus:text-zb-text'}
                         type={'text'}
-                        placeholder={'Type a command...'}
+                        placeholder={'Enter command...'}
                         aria-label={'Console command input.'}
                         disabled={!instance || !connected}
                         onKeyDown={handleCommandKeyDown}
@@ -251,16 +247,13 @@ export default ({ expand, setExpand }: Props) => {
                         autoCapitalize={'none'}
                     />
                     <div
-                        className={classNames(
-                            'text-slate-100 peer-focus:animate-pulse peer-focus:text-slate-50',
-                            styles.command_icon,
-                        )}
+                        className={'absolute left-4 top-1/2 -translate-y-1/2 text-zb-accent/60'}
                     >
                         <ChevronDoubleRightIcon className={'h-4 w-4'} />
                     </div>
-                    <div className={styles.expand_icon}>
+                    <div className={'absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-x-4'}>
                         <ArrowsExpandIcon
-                            className={'hover:text-green-400 w-4 h-4 duration-300'}
+                            className={'text-zb-muted hover:text-zb-accent w-4 h-4 cursor-pointer transition-colors duration-300'}
                             onClick={() => setExpand(s => !s)}
                         />
                     </div>

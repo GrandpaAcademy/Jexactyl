@@ -1,6 +1,5 @@
 import { AdjustmentsIcon, ChipIcon } from '@heroicons/react/outline';
 import { Route, Routes } from 'react-router-dom';
-import tw from 'twin.macro';
 
 import AdminContentBlock from '@/elements/AdminContentBlock';
 import FlashMessageRender from '@/elements/FlashMessageRender';
@@ -14,32 +13,29 @@ const SettingsRouter = () => {
 
     return (
         <AdminContentBlock title={'Settings'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Settings</h2>
-                    <p
-                        css={tw`hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        Configure and manage settings for {appName}.
+            <div className="w-full flex flex-row items-center mb-8 gap-4">
+                <div className="flex flex-col flex-shrink min-w-0">
+                    <h2 className="text-3xl text-neutral-50 font-medium tracking-tight uppercase">Settings</h2>
+                    <p className="hidden lg:block text-base text-neutral-400 mt-1 whitespace-nowrap overflow-ellipsis overflow-hidden">
+                        Configure and manage global settings for {appName}.
                     </p>
                 </div>
+                <div className="h-px bg-gradient-to-r from-zb-accent/50 to-transparent flex-grow" />
             </div>
 
-            <FlashMessageRender byKey={'admin:settings'} css={tw`mb-4`} />
+            <FlashMessageRender byKey={'admin:settings'} className="mb-6" />
 
             <SubNavigation>
-                <SubNavigationLink to="/admin/settings" name="Core" base>
-                    <ChipIcon />
-                </SubNavigationLink>
-                <SubNavigationLink to="/admin/settings/mode" name="Modes">
-                    <AdjustmentsIcon />
-                </SubNavigationLink>
+                <SubNavigationLink to="/admin/settings" name="Core" base icon={ChipIcon} />
+                <SubNavigationLink to="/admin/settings/mode" name="Modes" icon={AdjustmentsIcon} />
             </SubNavigation>
 
-            <Routes>
-                <Route path="/" element={<GeneralSettings />} />
-                <Route path="/mode" element={<ModeSettings />} />
-            </Routes>
+            <div className="mt-8">
+                <Routes>
+                    <Route path="/" element={<GeneralSettings />} />
+                    <Route path="/mode" element={<ModeSettings />} />
+                </Routes>
+            </div>
         </AdminContentBlock>
     );
 };

@@ -80,22 +80,20 @@ export const TableHeader = ({
     );
 };
 
-export const TableHead = ({ children }: { children: ReactNode }) => {
-    const { colors } = useStoreState(state => state.theme.data!);
-
+export const TableHead = ({ children, className }: { children: ReactNode; className?: string }) => {
     return (
-        <thead css={tw`border-t border-b border-gray-800`} style={{ backgroundColor: colors.headers }}>
+        <thead className={className}>
             <tr>{children}</tr>
         </thead>
     );
 };
 
 export const TableBody = ({ children }: { children: ReactNode }) => {
-    return <tbody>{children}</tbody>;
+    return <tbody className="divide-y divide-white/5">{children}</tbody>;
 };
 
-export const TableRow = ({ children }: { children: ReactNode }) => {
-    return <tr css={tw`h-12 hover:bg-neutral-600`}>{children}</tr>;
+export const TableRow = ({ children, className }: { children: ReactNode; className?: string }) => {
+    return <tr className={className}>{children}</tr>;
 };
 
 interface Props<T> {
@@ -305,13 +303,13 @@ export const ContentWrapper = ({ onSearch, children }: Params) => {
 
     return (
         <>
-            <div css={tw`flex flex-row items-center h-12 px-6`}>
-                <div css={tw`flex flex-row items-center ml-auto`}>
+            <div className="flex items-center h-16 px-6 mb-2">
+                <div className="flex items-center ml-auto group">
                     <InputSpinner visible={loading}>
                         <Input
                             value={inputText}
-                            css={tw`h-8`}
-                            placeholder="Search..."
+                            className="bg-black/40 border-white/5 focus:border-zb-accent/30 focus:ring-0 transition-all duration-300 w-64 h-9 rounded-xl placeholder:text-neutral-600"
+                            placeholder="Search resources..."
                             onChange={e => {
                                 setInputText(e.currentTarget.value);
                                 search(e.currentTarget.value);

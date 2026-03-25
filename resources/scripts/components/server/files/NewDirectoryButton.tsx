@@ -5,7 +5,6 @@ import Field from '@/elements/Field';
 import { join } from 'pathe';
 import { object, string } from 'yup';
 import { createDirectory } from '@/api/routes/server/directories';
-import tw from 'twin.macro';
 import { Button } from '@/elements/button/index';
 import { useFlashKey } from '@/plugins/useFlash';
 import useFileManagerSwr from '@/plugins/useFileManagerSwr';
@@ -69,24 +68,22 @@ const NewDirectoryDialog = asDialog({
             {({ submitForm, values }) => (
                 <>
                     <FlashMessageRender key={'files:directory-modal'} />
-                    <Form css={tw`m-0`}>
+                    <Form className={'m-0'}>
                         <Field autoFocus id={'directoryName'} name={'directoryName'} label={'Name'} />
-                        <p css={tw`mt-2 text-sm md:text-base break-all`}>
-                            <span css={tw`text-neutral-200`}>This directory will be created as&nbsp;</span>
-                            <Code>
+                        <p className={'mt-4 text-sm break-all font-medium text-zb-muted'}>
+                            This directory will be created as&nbsp;
+                            <span className="font-mono text-zb-accent bg-zb-accent/5 px-2 py-0.5 rounded border border-zb-accent/20">
                                 /home/container/
-                                <span css={tw`text-cyan-200`}>
-                                    {join(directory, values.directoryName).replace(/^(\.\.\/|\/)+/, '')}
-                                </span>
-                            </Code>
+                                {join(directory, values.directoryName).replace(/^(\.\.\/|\/)+/, '')}
+                            </span>
                         </p>
                     </Form>
                     <Dialog.Footer>
-                        <Button.Text className={'w-full sm:w-auto'} onClick={close}>
+                        <Button onClick={close} className="bg-white/5 border-white/10 hover:bg-white/10 text-zb-text-dim">
                             Cancel
-                        </Button.Text>
-                        <Button className={'w-full sm:w-auto'} onClick={submitForm}>
-                            Create
+                        </Button>
+                        <Button onClick={submitForm}>
+                            Create Directory
                         </Button>
                     </Dialog.Footer>
                 </>
@@ -101,9 +98,9 @@ export default ({ className }: { className?: string }) => {
     return (
         <>
             <NewDirectoryDialog open={open} onClose={setOpen.bind(this, false)} />
-            <Button.Text onClick={setOpen.bind(this, true)} className={className}>
-                Create Directory
-            </Button.Text>
+            <Button onClick={setOpen.bind(this, true)} className={classNames('bg-white/5 border-white/10 hover:bg-white/10 text-zb-text-dim', className)}>
+                New Directory
+            </Button>
         </>
     );
 };

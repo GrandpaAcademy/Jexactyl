@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import tw from 'twin.macro';
 import AdminContentBlock from '@/elements/AdminContentBlock';
 import FlashMessageRender from '@/elements/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
@@ -36,26 +35,30 @@ interface SuggestionProps {
 
 const Code = ({ children }: { children: ReactNode }) => {
     return (
-        <code css={tw`text-sm font-mono bg-neutral-900 rounded`} style={{ padding: '2px 6px' }}>
+        <code className="text-sm font-mono bg-white/5 border border-white/10 rounded-lg py-0.5 px-2 text-zb-accent">
             {children}
         </code>
     );
 };
 
 const SuggestionCard = ({ icon, title, description, link, action }: SuggestionProps) => {
-    const { colors } = useStoreState(state => state.theme.data!);
-
     return (
-        <div className={'bg-black/25 p-3 lg:p-6 rounded-lg'}>
-            <h1 className={'text-xl font-semibold mb-2'}>
-                <FontAwesomeIcon icon={icon} /> {title}
+        <div className="group bg-zb-card/20 backdrop-blur-xl p-6 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300 shadow-xl flex flex-col h-full">
+            <h1 className="text-xl font-semibold mb-3 flex items-center gap-3 text-neutral-100 uppercase tracking-wider text-sm">
+                <FontAwesomeIcon icon={icon} className="text-zb-accent shadow-zb-glow-sm/20" /> {title}
             </h1>
-            <p className={'text-gray-300'}>{description}</p>
-            <p className={'mt-2 text-right text-sm'} style={{ color: colors.primary }}>
-                <Link to={link}>
-                    {action ?? 'Manage'} <FontAwesomeIcon icon={faArrowRight} />
-                </Link>
+            <p className="text-zb-text-dim text-sm leading-relaxed mb-6 flex-grow">
+                {description}
             </p>
+            <div className="text-right">
+                <Link 
+                    to={link}
+                    className="inline-flex items-center gap-2 text-zb-accent text-sm font-medium hover:brightness-110 transition-all duration-300 group/link"
+                >
+                    {action ?? 'Manage'} 
+                    <FontAwesomeIcon icon={faArrowRight} className="transition-transform duration-300 group-hover/link:translate-x-1" />
+                </Link>
+            </div>
         </div>
     );
 };
@@ -89,111 +92,118 @@ export default () => {
 
     return (
         <AdminContentBlock title={'Overview'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Overview</h2>
-                    <p
-                        css={tw`hidden md:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        A quick glance at your system.
+            <div className="w-full flex flex-row items-center mb-8 gap-4">
+                <div className="flex flex-col flex-shrink min-w-0">
+                    <h2 className="text-3xl text-neutral-50 font-medium tracking-tight uppercase">Overview</h2>
+                    <p className="hidden md:block text-base text-neutral-400 mt-1">
+                        A quick glance at your system state.
                     </p>
                 </div>
+                <div className="h-px bg-gradient-to-r from-zb-accent/50 to-transparent flex-grow" />
             </div>
 
-            <FlashMessageRender byKey={'overview'} css={tw`mb-4`} />
+            <FlashMessageRender byKey={'overview'} className="mb-8" />
 
-            <AdminBox title={'Version Information'} icon={faDesktop}>
-                {settings.debug && (
-                    <Alert type={'warning'} className={'mb-3'}>
-                        Jexactyl is running in debug mode. Do not use in production.
-                    </Alert>
-                )}
-                {loading ? (
-                    <Spinner size={'large'} centered />
-                ) : (
-                    <>
-                        <div className={'text-gray-200 mb-2'}>
-                            You are currently running version&nbsp;
-                            <CopyOnClick text={versionData?.panel.current}>
-                                <Code>{versionData?.panel.current}</Code>
-                            </CopyOnClick>
-                            , with the latest release being &nbsp;
-                            <CopyOnClick text={versionData?.panel.latest}>
-                                <Code>{versionData?.panel.latest}</Code>
-                            </CopyOnClick>
-                            .
+            <div className="grid grid-cols-1 gap-8">
+                <AdminBox title={'Version Information'} icon={faDesktop} className="shadow-zb-glow-sm/5">
+                    {settings.debug && (
+                        <Alert type={'warning'} className={'mb-6'}>
+                            Zero-Bot is running in debug mode. This should not be enabled in production environments.
+                        </Alert>
+                    )}
+                    {loading ? (
+                        <div className="py-8 flex justify-center">
+                            <Spinner size={'large'} />
                         </div>
-                        {versionData?.panel.current.startsWith('v4.0.0-') && (
-                            <Alert type={'danger'} className={'mt-4'}>
-                                You are running a beta release of Jexactyl v4, which may include several bugs or weird
-                                glitches. Do NOT use this software in production unless you don&apos;t care about losing
-                                data.
-                            </Alert>
+                    ) : (
+                        <div className="space-y-4">
+                            <div className="text-neutral-200 flex flex-wrap items-center gap-2 leading-relaxed">
+                                You are currently running version&nbsp;
+                                <CopyOnClick text={versionData?.panel.current}>
+                                    <Code>{versionData?.panel.current}</Code>
+                                </CopyOnClick>
+                                , with the latest release being&nbsp;
+                                <CopyOnClick text={versionData?.panel.latest}>
+                                    <Code>{versionData?.panel.latest}</Code>
+                                </CopyOnClick>
+                                .
+                            </div>
+                            {versionData?.panel.current.startsWith('v4.0.0-') && (
+                                <Alert type={'danger'} className={'mt-4'}>
+                                    You are running a beta release of Zero-Bot v4. Bugs and data loss are possible. Use with caution.
+                                </Alert>
+                            )}
+                        </div>
+                    )}
+                </AdminBox>
+
+                <div className="relative">
+                    <div className="flex items-center gap-4 mb-6">
+                        <FontAwesomeIcon icon={faQuestionCircle} className="text-zb-accent text-xl" />
+                        <h3 className="text-xl font-medium text-neutral-100 uppercase tracking-wider">Suggested Actions</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {!settings.auto_update && (
+                            <SuggestionCard
+                                icon={faRecycle}
+                                link={'/admin/settings'}
+                                title={'Auto Updates'}
+                                description={
+                                    'By setting up automatic updates, you can keep Zero-Bot stable and secure in the background.'
+                                }
+                            />
                         )}
-                    </>
-                )}
-            </AdminBox>
-            <AdminBox title={'Suggested Actions'} className={'mt-6'} icon={faQuestionCircle}>
-                <div className={'grid lg:grid-cols-3 gap-4'}>
-                    {!settings.auto_update && (
+                        {!everest.auth.registration.enabled && (
+                            <SuggestionCard
+                                icon={faUserPlus}
+                                link={'/admin/auth'}
+                                title={'Allow User Signup'}
+                                description={
+                                    'Enabling the Authentication module allows users to signup via the login page.'
+                                }
+                            />
+                        )}
+                        {metricData && (
+                            <>
+                                {metricData.nodes < 1 && (
+                                    <SuggestionCard
+                                        icon={faLayerGroup}
+                                        link={'/admin/nodes/new'}
+                                        title={'Add First Node'}
+                                        description={"Nodes are physical servers which Zero-Bot's servers run on."}
+                                    />
+                                )}
+                                {metricData.servers < 1 && (
+                                    <SuggestionCard
+                                        icon={faServer}
+                                        link={'/admin/servers/new'}
+                                        title={'Create First Server'}
+                                        description={'Create a server to host your favourite game or program.'}
+                                    />
+                                )}
+                                {everest.tickets.enabled && metricData.tickets > 0 && (
+                                    <SuggestionCard
+                                        icon={faTicket}
+                                        link={'/admin/tickets'}
+                                        title={'Pending Tickets'}
+                                        description={`You currently have ${metricData.tickets} pending tickets which require your attention.`}
+                                    />
+                                )}
+                            </>
+                        )}
                         <SuggestionCard
-                            icon={faRecycle}
-                            link={'/admin/settings'}
-                            title={'Enable automatic updates'}
+                            icon={faHeart}
+                            link={'https://donate.stripe.com/6oE02Zftd9cC34IbIS'}
+                            title={'Support Zero-Bot'}
+                            action={'Donate'}
                             description={
-                                'By setting up automatic updates, you can keep Jexactyl stable and secure in the background.'
+                                'Help sustain the project development by making a donation towards infrastructure costs.'
                             }
                         />
-                    )}
-                    {!everest.auth.registration.enabled && (
-                        <SuggestionCard
-                            icon={faUserPlus}
-                            link={'/admin/auth'}
-                            title={'Allow user registration'}
-                            description={
-                                'Enabling the Authentication module allows users to signup via the login page.'
-                            }
-                        />
-                    )}
-                    {metricData && (
-                        <>
-                            {metricData.nodes < 1 && (
-                                <SuggestionCard
-                                    icon={faLayerGroup}
-                                    link={'/admin/nodes/new'}
-                                    title={'Add your first node'}
-                                    description={"Nodes are physical servers which Jexactyl's servers run on."}
-                                />
-                            )}
-                            {metricData.servers < 1 && (
-                                <SuggestionCard
-                                    icon={faServer}
-                                    link={'/admin/servers/new'}
-                                    title={'Create your first server'}
-                                    description={'Create a server to host your favourite game or program.'}
-                                />
-                            )}
-                            {everest.tickets.enabled && metricData.tickets > 0 && (
-                                <SuggestionCard
-                                    icon={faTicket}
-                                    link={'/admin/tickets'}
-                                    title={'Answer customer tickets'}
-                                    description={`You currently have ${metricData.tickets} pending tickets.`}
-                                />
-                            )}
-                        </>
-                    )}
-                    <SuggestionCard
-                        icon={faHeart}
-                        link={'https://donate.stripe.com/6oE02Zftd9cC34IbIS'}
-                        title={'Donate to Jexactyl'}
-                        action={'Donate'}
-                        description={
-                            'Support the project by leaving a donation to help us pay for testing servers and domains.'
-                        }
-                    />
+                    </div>
                 </div>
-            </AdminBox>
+            </div>
         </AdminContentBlock>
     );
 };

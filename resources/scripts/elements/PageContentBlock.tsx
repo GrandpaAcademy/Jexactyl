@@ -43,8 +43,9 @@ function PageContentBlock({ title, header, description, showFlashKey, className,
                         rel={'noopener nofollow noreferrer'}
                         href={'https://zero-bot.net'}
                         target={'_blank'}
-                        css={tw`no-underline text-zb-accent hover:text-white transition-all duration-250 shadow-zb-glow-sm`}
+                        css={tw`no-underline text-zb-accent hover:text-white transition-all duration-250 shadow-zb-glow-sm flex items-center justify-center gap-x-2`}
                     >
+                        <img src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'} className={'w-3 h-3'} alt={'Zero-Bot'} />
                         Zero-Bot.net
                     </a>
                 </p>

@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Button } from '@/elements/button/index';
 import { Dialog, DialogWrapperContext } from '@/elements/dialog';
 import Tooltip from '@/elements/tooltip/Tooltip';
-import Code from '@/elements/Code';
 import asDialog from '@/hoc/asDialog';
 import { ServerContext } from '@/state/server';
 
@@ -19,12 +18,12 @@ const svgProps = {
 
 const Spinner = ({ progress, className }: { progress: number; className?: string }) => (
     <svg viewBox={'0 0 32 32'} className={className}>
-        <circle {...svgProps} className={'opacity-25'} />
+        <circle {...svgProps} className={'opacity-10 text-white'} />
         <circle
             {...svgProps}
-            stroke={'white'}
+            stroke={'#00F0FF'}
             strokeDasharray={28 * Math.PI}
-            className={'origin-[50%_50%] rotate-[-90deg] transition-[stroke-dashoffset] duration-300'}
+            className={'origin-[50%_50%] rotate-[-90deg] transition-[stroke-dashoffset] duration-300 drop-shadow-[0_0_2px_rgba(0,240,255,0.5)]'}
             style={{ strokeDashoffset: ((100 - progress) / 100) * 28 * Math.PI }}
         />
     </svg>
@@ -39,28 +38,34 @@ const FileUploadList = () => {
     );
 
     return (
-        <div className={'mt-6 space-y-2'}>
+        <div className={'mt-6 space-y-3'}>
             {uploads.map(([name, file]) => (
-                <div key={name} className={'flex items-center space-x-3 rounded bg-slate-700 p-3'}>
+                <div key={name} className={'flex items-center space-x-3 rounded-xl bg-white/5 border border-white/5 p-4 transition-all duration-300 hover:border-white/10'}>
                     <Tooltip content={`${Math.floor((file.loaded / file.total) * 100)}%`} placement={'left'}>
                         <div className={'flex-shrink-0'}>
-                            <Spinner progress={(file.loaded / file.total) * 100} className={'h-6 w-6'} />
+                            <Spinner progress={(file.loaded / file.total) * 100} className={'h-8 w-8'} />
                         </div>
                     </Tooltip>
-                    <Code className={'flex-1 truncate'}>{name}</Code>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zb-text-dim truncate lowercase tracking-tight">
+                            {name}
+                        </p>
+                    </div>
                     <button
                         onClick={cancelFileUpload.bind(this, name)}
-                        className={'text-slate-500 transition-colors duration-75 hover:text-slate-200'}
+                        className={'text-zb-muted/40 transition-colors duration-300 hover:text-zb-danger'}
                     >
                         <XIcon className={'h-5 w-5'} />
                     </button>
                 </div>
             ))}
             <Dialog.Footer>
-                <Button.Danger variant={Button.Variants.Secondary} onClick={() => clearFileUploads()}>
-                    Cancel Uploads
-                </Button.Danger>
-                <Button.Text onClick={close}>Close</Button.Text>
+                <Button onClick={() => clearFileUploads()} className="bg-zb-danger/10 border-zb-danger/30 text-zb-danger hover:bg-zb-danger/20">
+                    Cancel All
+                </Button>
+                <Button onClick={close} className="bg-white/5 border-white/10 hover:bg-white/10 text-zb-text-dim">
+                    Close
+                </Button>
             </Dialog.Footer>
         </div>
     );
@@ -90,9 +95,9 @@ export default () => {
         <>
             {count > 0 && (
                 <Tooltip content={`${count} files are uploading, click to view`}>
-                    <button className={'flex h-10 w-10 items-center justify-center'} onClick={() => setOpen(true)}>
-                        <Spinner progress={(progress.uploaded / progress.total) * 100} className={'h-8 w-8'} />
-                        <CloudUploadIcon className={'absolute mx-auto h-3 animate-pulse'} />
+                    <button className={'relative flex h-10 w-10 items-center justify-center group'} onClick={() => setOpen(true)}>
+                        <Spinner progress={(progress.uploaded / progress.total) * 100} className={'h-10 w-10 group-hover:scale-110 transition-transform duration-300'} />
+                        <CloudUploadIcon className={'absolute mx-auto h-4 text-zb-accent animate-pulse drop-shadow-zb-glow-sm'} />
                     </button>
                 </Tooltip>
             )}

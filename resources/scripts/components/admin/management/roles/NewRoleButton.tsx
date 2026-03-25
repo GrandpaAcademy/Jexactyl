@@ -1,6 +1,5 @@
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
-import tw from 'twin.macro';
 import { object, string } from 'yup';
 import { getRoles, createRole } from '@/api/routes/admin/roles';
 import FlashMessageRender from '@/elements/FlashMessageRender';
@@ -59,48 +58,52 @@ export default () => {
                         }}
                     >
                         <SpinnerOverlay visible={isSubmitting} />
-                        <FlashMessageRender byKey={'role:create'} css={tw`mb-6`} />
-                        <h2 css={tw`mb-6 text-2xl text-neutral-100`}>New Role</h2>
-                        <Form css={tw`m-0`}>
+                        <FlashMessageRender byKey={'role:create'} className="mb-6 rounded-xl overflow-hidden shadow-lg border border-white/5" />
+                        
+                        <div className="flex flex-col gap-2 mb-8">
+                            <h2 className="text-3xl text-neutral-100 font-semibold tracking-tight uppercase tracking-widest">Create New Tier</h2>
+                            <p className="text-sm text-neutral-400 opacity-70">
+                                Provision a new administrative tier with unique permission sets.
+                            </p>
+                        </div>
+
+                        <Form className="m-0 space-y-6">
                             <Field
                                 type={'text'}
                                 id={'name'}
                                 name={'name'}
-                                label={'Name'}
-                                description={'A short name used to identify this role.'}
+                                label={'Tier Name'}
+                                description={'A unique identifier for this administrative rank.'}
                                 autoFocus
                             />
 
-                            <div css={tw`mt-6`}>
-                                <Field
-                                    type={'text'}
-                                    id={'description'}
-                                    name={'description'}
-                                    label={'Description'}
-                                    description={'A description for this role.'}
-                                />
-                            </div>
-                            <div css={tw`mt-6`}>
-                                <Field
-                                    type={'color'}
-                                    id={'color'}
-                                    name={'color'}
-                                    label={'Role Color'}
-                                    description={'Set a color for this role. (optional)'}
-                                />
-                            </div>
+                            <Field
+                                type={'text'}
+                                id={'description'}
+                                name={'description'}
+                                label={'Description'}
+                                description={'Define the operational scope of this tier.'}
+                            />
 
-                            <div css={tw`flex flex-wrap justify-end mt-6`}>
+                            <Field
+                                type={'color'}
+                                id={'color'}
+                                name={'color'}
+                                label={'Tier Identity Color'}
+                                description={'Visual indicator for this rank in management tables.'}
+                            />
+
+                            <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-10 p-4 bg-white/5 rounded-xl border border-white/5">
                                 <Button
-                                    type={'button'}
+                                    type="button"
                                     variant={Button.Variants.Secondary}
-                                    css={tw`w-full sm:w-auto sm:mr-2`}
+                                    className="w-full sm:w-auto"
                                     onClick={() => setVisible(false)}
                                 >
-                                    Cancel
+                                    Abort
                                 </Button>
-                                <Button css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
-                                    Create Role
+                                <Button className="w-full sm:w-auto shadow-zb-glow-sm/20 px-8" type="submit">
+                                    Initialize Tier
                                 </Button>
                             </div>
                         </Form>
@@ -111,10 +114,10 @@ export default () => {
             <Button
                 type={'button'}
                 size={Button.Sizes.Large}
-                css={tw`h-10 px-4 py-0 whitespace-nowrap`}
+                className="shadow-zb-glow-sm/20 px-6 py-2.5 h-auto font-medium"
                 onClick={() => setVisible(true)}
             >
-                New Role
+                Create Rank
             </Button>
         </>
     );

@@ -54,11 +54,12 @@ export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => 
                         &copy; {new Date().getFullYear()}&nbsp;
                         <a
                             rel={'noopener nofollow noreferrer'}
-                            href={'https://jexpanel.com'}
+                            href={'https://zero-bot.net'}
                             target={'_blank'}
-                            css={tw`no-underline text-neutral-300 hover:text-green-400 duration-300`}
+                            css={tw`no-underline text-neutral-300 hover:text-zb-accent duration-300 flex items-center justify-center gap-x-2`}
                         >
-                            Jexpanel.com
+                            <img src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'} className={'w-4 h-4'} alt={'Zero-Bot'} />
+                            Zero-Bot.net
                         </a>
                     </p>
                 </div>

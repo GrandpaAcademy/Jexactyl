@@ -27,12 +27,12 @@ import { timeUntil } from '../server/billing/ServerBillingContainer';
 export function statusToColor(state?: ServerPowerState): string {
     switch (state) {
         case 'running':
-            return 'text-green-500';
+            return 'text-zb-success shadow-zb-glow-success';
         case 'starting':
         case 'stopping':
-            return 'text-yellow-500';
+            return 'text-zb-warning shadow-zb-glow-warning';
         default:
-            return 'text-red-500';
+            return 'text-zb-danger shadow-zb-glow-danger';
     }
 }
 
@@ -50,21 +50,21 @@ const UtilBox = ({
     return (
         <div
             className={classNames(
-                'col-span-2 lg:col-span-1 w-full h-full bg-white/10 lg:shadow-xl m-auto px-4 py-2',
-                rounded === 'left' && 'lg:rounded-l-lg',
-                rounded === 'right' && 'lg:rounded-r-lg',
-                rounded === 'full' && 'lg:rounded-lg lg:col-span-3',
+                'col-span-2 lg:col-span-1 w-full h-full bg-white/5 lg:shadow-inner m-auto px-4 py-2 border border-white/5',
+                rounded === 'left' && 'lg:rounded-l-xl',
+                rounded === 'right' && 'lg:rounded-r-xl',
+                rounded === 'full' && 'lg:rounded-xl lg:col-span-3',
             )}
         >
-            <div className={'text-gray-300 font-bold text-center'}>
-                <p className={'my-auto inline-flex text-sm'}>
-                    <FontAwesomeIcon icon={icon} className={'my-auto mr-1'} size={'xs'} />
-                    <p className={'my-auto'}>
+            <div className={'text-zb-text-dim font-bold text-center'}>
+                <div className={'inline-flex items-center gap-x-2 text-xs'}>
+                    <FontAwesomeIcon icon={icon} className={'text-zb-accent/60'} size={'xs'} />
+                    <span>
                         {utilised > -1
                             ? `${utilised === Infinity ? 0 : utilised}%`
                             : `Server is ${server?.isTransferring ? 'transferring' : server?.status ?? 'offline'}`}
-                    </p>
-                </p>
+                    </span>
+                </div>
             </div>
         </div>
     );
@@ -83,7 +83,6 @@ export default ({
 }) => {
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
     const [stats, setStats] = useState<ServerStats>();
-    const colors = useStoreState(state => state.theme.data!.colors);
     const interval = useRef<Timer>(null) as React.MutableRefObject<Timer>;
     const [isSuspended, setIsSuspended] = useState(server.status === 'suspended');
     const [removed, setRemoved] = useState(false);
@@ -110,8 +109,6 @@ export default ({
     }, [stats?.isSuspended, server.status]);
 
     useEffect(() => {
-        // Don't waste a HTTP request if there is nothing important to show to the user because
-        // the server is suspended.
         if (isSuspended) return;
 
         getStats().then(() => {
@@ -131,39 +128,43 @@ export default ({
     return (
         <>
             <div
-                className={'w-full p-4 rounded-lg grid grid-cols-2 lg:grid-cols-12 mb-2'}
-                style={{ backgroundColor: colors.background }}
+                className={'w-full p-5 rounded-2xl grid grid-cols-2 lg:grid-cols-12 mb-4 bg-zb-card/30 backdrop-blur-lg border border-white/5 hover:border-zb-accent/30 shadow-2xl transition-all duration-300 group hover:shadow-zb-glow/10'}
             >
-                <FontAwesomeIcon
-                    className={classNames(statusToColor(stats?.status ?? 'offline'), 'my-auto ml-4 col-span-1')}
-                    icon={server.status === 'suspended' ? faXmarkCircle : faPowerOff}
-                    size={'lg'}
-                />
+                <div className="my-auto col-span-1 flex justify-center lg:justify-start lg:pl-4">
+                    <FontAwesomeIcon
+                        className={classNames(statusToColor(stats?.status ?? 'offline'), 'transition-all duration-500')}
+                        icon={server.status === 'suspended' ? faXmarkCircle : faPowerOff}
+                        size={'lg'}
+                    />
+                </div>
                 <Link
                     to={`/server/${server.id}`}
-                    className="whitespace-nowrap text-white col-span-1 lg:col-span-6 mb-4 lg:mb-0 hover:brightness-150 transition duration-300"
+                    className="whitespace-nowrap text-zb-text col-span-1 lg:col-span-6 mb-4 lg:mb-0 transition duration-300"
                 >
-                    {server.name}
-                    <div className={'text-gray-500 text-xs my-auto'}>
-                        {server.allocations[0]?.ip.toString()}:{server.allocations[0]?.port.toString()} &bull;{' '}
+                    <span className="text-lg font-bold tracking-tight group-hover:text-zb-accent transition-colors">
+                        {server.name}
+                    </span>
+                    <div className={'text-zb-muted text-[11px] font-mono mt-1 flex items-center gap-x-2'}>
+                        <span className="bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                            {server.allocations[0]?.ip.toString()}:{server.allocations[0]?.port.toString()}
+                        </span>
                         {server.renewalDate && (
-                            <>
-                                {timeUntil(server.renewalDate).days}d {timeUntil(server.renewalDate).hours}h until
-                                renewal
-                            </>
+                            <span className="text-zb-accent-2/80">
+                                &bull; {timeUntil(server.renewalDate).days}d {timeUntil(server.renewalDate).hours}h left
+                            </span>
                         )}
                     </div>
                 </Link>
                 <div className={'col-span-1 lg:col-span-2 my-auto mr-2'}>
                     {group && group.id === server.groupId && !removed ? (
                         <Pill size={'small'} type={'unknown'}>
-                            <span style={{ color: group?.color }} className={'cursor-default ml-3'}>
+                            <span style={{ color: group?.color }} className={'cursor-default flex items-center gap-x-2'}>
                                 {group.name}
                                 <div
                                     onClick={onDelete}
-                                    className={'opacity-0 hover:opacity-100 transition duration-200 inline-flex'}
+                                    className={'opacity-0 group-hover:opacity-100 transition duration-200 inline-flex cursor-pointer hover:scale-110 active:scale-95'}
                                 >
-                                    <FontAwesomeIcon icon={faTrash} size={'xs'} color={'red'} className={'ml-1'} />
+                                    <FontAwesomeIcon icon={faTrash} size={'xs'} className={'text-zb-danger'} />
                                 </div>
                             </span>
                         </Pill>
@@ -171,23 +172,25 @@ export default ({
                         <div
                             onClick={() => setOpen({ open: 'add', serverId: server.uuid })}
                             className={
-                                'hidden xl:inline-flex leading-5 font-medium text-2xs px-2 py-0.25 text-gray-500 rounded-full border border-gray-400 border-dashed cursor-pointer hover:bg-white/10 hover:text-white transition duration-300'
+                                'hidden xl:inline-flex leading-none font-bold text-[10px] uppercase tracking-wider px-3 py-1.5 text-zb-muted rounded-full border border-white/10 border-dashed cursor-pointer hover:bg-zb-accent/10 hover:text-zb-accent hover:border-zb-accent/30 transition-all duration-300'
                             }
                         >
-                            <FontAwesomeIcon icon={faPlus} className={'mr-1 my-auto'} />
+                            <FontAwesomeIcon icon={faPlus} className={'mr-2'} />
                             Add Group
                         </div>
                     )}
                 </div>
-                {server.status || stats?.status === 'offline' ? (
-                    <UtilBox rounded={'full'} utilised={-1} icon={faInfoCircle} server={server} />
-                ) : (
-                    <>
-                        <UtilBox rounded={'left'} utilised={Number(cpuUsed?.toFixed(0))} icon={faMicrochip} />
-                        <UtilBox utilised={Number(memoryUsed.toFixed(0))} icon={faMemory} />
-                        <UtilBox rounded={'right'} utilised={Number(diskUsed.toFixed(0))} icon={faFloppyDisk} />
-                    </>
-                )}
+                <div className="col-span-2 lg:col-span-3 flex items-center">
+                    {server.status || stats?.status === 'offline' ? (
+                        <UtilBox rounded={'full'} utilised={-1} icon={faInfoCircle} server={server} />
+                    ) : (
+                        <div className="grid grid-cols-3 w-full">
+                            <UtilBox rounded={'left'} utilised={Number(cpuUsed?.toFixed(0))} icon={faMicrochip} />
+                            <UtilBox utilised={Number(memoryUsed.toFixed(0))} icon={faMemory} />
+                            <UtilBox rounded={'right'} utilised={Number(diskUsed.toFixed(0))} icon={faFloppyDisk} />
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     );

@@ -46,11 +46,14 @@ function AdminRouter() {
                     onClick={() => setCollapsed(!collapsed)}
                 >
                     {!collapsed ? (
-                        <h1 className={'text-2xl text-neutral-50 whitespace-nowrap font-medium'}>{settings.name}</h1>
+                        <div className={'flex items-center gap-x-3'}>
+                            <img src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'} className={'w-8 h-8 drop-shadow-zb-glow'} alt={'Logo'} />
+                            <h1 className={'text-2xl text-neutral-50 whitespace-nowrap font-bold tracking-tight'}>Zero-Bot</h1>
+                        </div>
                     ) : (
                         <img
-                            src={settings.logo?.toString() || 'https://avatars.githubusercontent.com/u/91636558'}
-                            className={'mt-4 w-12'}
+                            src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'}
+                            className={'mt-4 w-10 h-10 drop-shadow-zb-glow'}
                             alt={'Logo'}
                         />
                     )}

@@ -17,9 +17,9 @@ function getBackgroundColor(value: number, max: number | null): string | undefin
 
     if (delta > 0.8) {
         if (delta > 0.9) {
-            return '#ef4444';
+            return '#EF4444'; // zb-danger
         }
-        return '#f59e0b';
+        return '#FBBF24'; // zb-warning
     }
 
     return undefined;
@@ -27,10 +27,10 @@ function getBackgroundColor(value: number, max: number | null): string | undefin
 
 function Limit({ limit, children }: { limit: string | null; children: ReactNode }) {
     return (
-        <>
-            {children}
-            <span className={'ml-1 select-none text-[70%] text-slate-300'}>/ {limit || <>&infin;</>}</span>
-        </>
+        <div className="flex items-baseline gap-x-1">
+            <span className="text-zb-text font-bold">{children}</span>
+            <span className={'text-[10px] font-medium text-zb-muted/60 uppercase tracking-tighter'}>/ {limit || <>&infin;</>}</span>
+        </div>
     );
 }
 
@@ -84,15 +84,15 @@ function ServerDetailsBlock({ className }: { className?: string }) {
     });
 
     return (
-        <div className={classNames('grid grid-cols-10 gap-2 md:gap-4 mb-6', className)}>
-            <StatBlock icon={faWifi} title={'Address'} className={'col-span-5 lg:col-span-2'} copyOnClick={allocation}>
-                {allocation}
+        <div className={classNames('grid grid-cols-10 gap-4 lg:gap-6 mb-8', className)}>
+            <StatBlock icon={faWifi} title={'Address'} className={'col-span-10 md:col-span-5 lg:col-span-2'} copyOnClick={allocation}>
+                <span className="text-zb-accent-2 font-mono text-sm leading-none">{allocation}</span>
             </StatBlock>
             <StatBlock
                 icon={faClock}
                 title={'Uptime'}
                 className={'col-span-5 lg:col-span-2'}
-                color={getBackgroundColor(status === 'running' ? 0 : status !== 'offline' ? 9 : 10, 10)}
+                color={status === 'running' ? '#10B981' : '#FBBF24'}
             >
                 {status === null ? (
                     'Offline'
@@ -109,28 +109,28 @@ function ServerDetailsBlock({ className }: { className?: string }) {
                 color={getBackgroundColor(stats.cpu, limits.cpu)}
             >
                 {status === 'offline' ? (
-                    <span className={'text-slate-400'}>Offline</span>
+                    <span className={'text-zb-muted/60 lowercase italic'}>offline</span>
                 ) : (
-                    <Limit limit={textLimits.cpu}>{stats.cpu.toFixed(2)}%</Limit>
+                    <Limit limit={textLimits.cpu}>{stats.cpu.toFixed(1)}%</Limit>
                 )}
             </StatBlock>
             <StatBlock
                 icon={faMemory}
                 title={'Memory'}
                 className={'col-span-5 lg:col-span-2'}
-                color={getBackgroundColor(stats.memory / 1024, limits.memory * 1024)}
+                color={getBackgroundColor(stats.memory / 1024 / 1024, limits.memory)}
             >
                 {status === 'offline' ? (
-                    <span className={'text-slate-400'}>Offline</span>
+                    <span className={'text-zb-muted/60 lowercase italic'}>offline</span>
                 ) : (
                     <Limit limit={textLimits.memory}>{bytesToString(stats.memory)}</Limit>
                 )}
             </StatBlock>
             <StatBlock
                 icon={faHdd}
-                title={'Disk'}
+                title={'Disk Capacity'}
                 className={'col-span-5 lg:col-span-2'}
-                color={getBackgroundColor(stats.disk / 1024, limits.disk * 1024)}
+                color={getBackgroundColor(stats.disk / 1024 / 1024, limits.disk)}
             >
                 <Limit limit={textLimits.disk}>{bytesToString(stats.disk)}</Limit>
             </StatBlock>

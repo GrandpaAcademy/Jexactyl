@@ -1,6 +1,4 @@
-import type { ChangeEvent } from 'react';
 import { useEffect, useMemo } from 'react';
-import tw from 'twin.macro';
 
 import { httpErrorToHuman } from '@/api/http';
 import Spinner from '@/elements/Spinner';
@@ -20,7 +18,6 @@ import UploadButton from '@server/files/UploadButton';
 import { useStoreActions, useStoreState } from '@/state/hooks';
 import ErrorBoundary from '@/elements/ErrorBoundary';
 import { FileActionCheckbox } from '@server/files/SelectFileCheckbox';
-import style from './style.module.css';
 import FadeTransition from '@/elements/transitions/FadeTransition';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import { faBorderAll, faFolderPlus, faList } from '@fortawesome/free-solid-svg-icons';
@@ -28,8 +25,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FileObjectList from './FileObjectList';
 import CopyOnClick from '@/elements/CopyOnClick';
 import Input from '@/elements/Input';
-import Label from '@/elements/Label';
-import TitledGreyBox from '@/elements/TitledGreyBox';
 import { ip } from '@/lib/formatters';
 import PageContentBlock from '@/elements/PageContentBlock';
 import { hashToPath } from '@/lib/helpers';
@@ -160,53 +155,58 @@ export default () => {
             showFlashKey={'files'}
         >
             <ErrorBoundary>
-                <div className={'mb-4 flex flex-wrap-reverse md:flex-nowrap'}>
+                <div className={'mb-6 flex flex-wrap-reverse md:flex-nowrap items-center gap-4 bg-zb-card/30 backdrop-blur-xl border border-white/5 p-4 rounded-2xl shadow-xl'}>
                     <FileManagerBreadcrumbs
                         renderLeft={
                             <FileActionCheckbox
                                 type={'checkbox'}
-                                css={tw`mx-4`}
                                 checked={selectedFilesLength === (files?.length === 0 ? -1 : files?.length)}
                                 onChange={onSelectAllClick}
                             />
                         }
                     />
                     <Can action={'file.create'}>
-                        <div className={style.manager_actions}>
+                        <div className="flex items-center gap-2 ml-auto">
                             <FileManagerStatus />
+                            <div className="h-8 w-px bg-white/10 mx-2 hidden md:block" />
                             <NewDirectoryButton />
                             <UploadButton />
                             <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
-                                <Button>New File</Button>
+                                <Button className="bg-zb-accent/10 border-zb-accent/30 text-zb-accent hover:bg-zb-accent/20">New File</Button>
                             </NavLink>
-                            <Button onClick={() => setGridView(!gridView)}>
+                            <Button onClick={() => setGridView(!gridView)} className="bg-white/5 border-white/10 hover:bg-white/10 text-zb-text-dim">
                                 <FontAwesomeIcon icon={gridView ? faList : faBorderAll} fixedWidth />
                             </Button>
                         </div>
                     </Can>
                 </div>
-                <div className={'mb-4'}>
+                <div className={'mb-6'}>
                     <FileSortControls />
                 </div>
             </ErrorBoundary>
-            <div className={'grid gap-4 xl:grid-cols-4'}>
+            <div className={'grid gap-6 xl:grid-cols-4'}>
                 <div className={'xl:col-span-3'}>
                     {!files ? (
-                        <Spinner size={'large'} centered />
+                        <div className="flex flex-col items-center justify-center py-20 bg-zb-card/20 backdrop-blur-md rounded-2xl border border-white/5">
+                            <Spinner size={'large'} />
+                            <p className="mt-4 text-zb-muted animate-pulse">Scanning file system...</p>
+                        </div>
                     ) : (
-                        <>
+                        <div className="bg-zb-card/30 backdrop-blur-xl border border-white/5 rounded-2xl shadow-xl p-4 min-h-[400px]">
                             {!filteredFiles.length ? (
-                                <p css={tw`text-sm text-neutral-400 text-center`}>
-                                    {searchTerm
-                                        ? 'No files found matching your search.'
-                                        : 'This directory seems to be empty.'}
-                                </p>
+                                <div className="flex flex-col items-center justify-center py-20">
+                                    <p className="text-zb-muted font-medium">
+                                        {searchTerm
+                                            ? 'No files found matching your search.'
+                                            : 'This directory seems to be empty.'}
+                                    </p>
+                                </div>
                             ) : (
                                 <FadeTransition duration="duration-150" appear show>
                                     <div>
                                         {filteredFiles.length > 250 && (
-                                            <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
-                                                <p css={tw`text-yellow-900 text-sm text-center`}>
+                                            <div className="rounded-xl bg-zb-warning/10 border border-zb-warning/30 mb-4 p-4">
+                                                <p className="text-zb-warning text-sm text-center font-medium">
                                                     {searchTerm
                                                         ? `Found ${filteredFiles.length} files matching your search, showing first 250.`
                                                         : 'This directory is too large to display in the browser, limiting the output to the first 250 files.'}
@@ -214,66 +214,92 @@ export default () => {
                                             </div>
                                         )}
                                         {searchTerm && filteredFiles.length <= 250 && (
-                                            <div
-                                                css={tw`rounded mb-px p-3`}
-                                                style={{ backgroundColor: colors.primary }}
-                                            >
-                                                <p css={tw`text-white text-sm text-center`}>
+                                            <div className="rounded-xl bg-zb-accent/10 border border-zb-accent/30 mb-4 p-4">
+                                                <p className="text-zb-accent text-sm text-center font-bold">
                                                     Found {filteredFiles.length}{' '}
                                                     {filteredFiles.length === 1 ? 'file' : 'files'} matching &quot;
                                                     {searchTerm}&quot;
                                                 </p>
                                             </div>
                                         )}
-                                        {gridView ? (
-                                            <div className={'grid grid-cols-2 gap-2 lg:grid-cols-6 lg:gap-4'}>
-                                                {displayFiles.map(file => (
-                                                    <FileObjectGrid key={file.key} file={file} />
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <>
-                                                {displayFiles.map(file => (
-                                                    <FileObjectList key={file.key} file={file} />
-                                                ))}
-                                            </>
-                                        )}
+                                        <div className="space-y-1">
+                                            {gridView ? (
+                                                <div className={'grid grid-cols-2 gap-4 lg:grid-cols-4 xl:grid-cols-6'}>
+                                                    {displayFiles.map(file => (
+                                                        <FileObjectGrid key={file.key} file={file} />
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    {displayFiles.map(file => (
+                                                        <FileObjectList key={file.key} file={file} />
+                                                    ))}
+                                                </>
+                                            )}
+                                        </div>
                                         <MassActionsBar />
                                     </div>
                                 </FadeTransition>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
                 <Can action={'file.sftp'}>
-                    <TitledGreyBox title={'SFTP Details'} icon={faFolderPlus} css={tw`xl:mt-0 mt-6 h-auto`}>
-                        <div>
-                            <Label>Server Address</Label>
-                            <CopyOnClick text={`sftp://${ip(sftp.ip)}:${sftp.port}`}>
-                                <Input type={'text'} value={`sftp://${ip(sftp.ip)}:${sftp.port}`} readOnly />
-                            </CopyOnClick>
-                        </div>
-                        <div css={tw`mt-6`}>
-                            <Label>Username</Label>
-                            <CopyOnClick text={`${username}.${id}`}>
-                                <Input type={'text'} value={`${username}.${id}`} readOnly />
-                            </CopyOnClick>
-                        </div>
-                        <div css={tw`mt-6 flex items-center`}>
-                            <div css={tw`flex-1`}>
-                                <div css={tw`border-l-4 border-cyan-500 p-3`}>
-                                    <p css={tw`text-xs text-neutral-200`}>
+                    <div className="flex flex-col gap-y-6">
+                        <div className="bg-zb-card/40 backdrop-blur-2xl border border-white/5 p-6 rounded-2xl shadow-2xl transition-all duration-300 hover:border-zb-accent/20 group">
+                            <div className="flex items-center gap-x-3 mb-6">
+                                <div className="p-2 rounded-lg bg-zb-accent/10 text-zb-accent group-hover:shadow-zb-glow-sm transition-all duration-300">
+                                    <FontAwesomeIcon icon={faFolderPlus} />
+                                </div>
+                                <h3 className="font-bold text-zb-text tracking-tight">SFTP Details</h3>
+                            </div>
+                            
+                            <div className="space-y-6">
+                                <div>
+                                    <Label className="text-[10px] uppercase tracking-widest text-zb-muted font-bold mb-2 block">Server Address</Label>
+                                    <CopyOnClick text={`sftp://${ip(sftp.ip)}:${sftp.port}`}>
+                                        <div className="relative group/input">
+                                            <input 
+                                                type="text" 
+                                                value={`sftp://${ip(sftp.ip)}:${sftp.port}`} 
+                                                readOnly 
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-zb-text-dim font-mono text-xs focus:ring-0 focus:border-zb-accent/50 transition-all duration-300"
+                                            />
+                                        </div>
+                                    </CopyOnClick>
+                                </div>
+                                
+                                <div>
+                                    <Label className="text-[10px] uppercase tracking-widest text-zb-muted font-bold mb-2 block">Username</Label>
+                                    <CopyOnClick text={`${username}.${id}`}>
+                                        <div className="relative group/input">
+                                            <input 
+                                                type="text" 
+                                                value={`${username}.${id}`} 
+                                                readOnly 
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-zb-text-dim font-mono text-xs focus:ring-0 focus:border-zb-accent/50 transition-all duration-300"
+                                            />
+                                        </div>
+                                    </CopyOnClick>
+                                </div>
+
+                                <div className="bg-zb-accent/5 border-l-4 border-zb-accent p-4 rounded-r-xl">
+                                    <p className="text-[11px] text-zb-text-dim leading-relaxed">
                                         Your SFTP password is the same as the password you use to access this panel.
                                     </p>
                                 </div>
-                            </div>
-                            <div css={tw`ml-4`}>
-                                <a href={`sftp://${username}.${id}@${ip(sftp.ip)}:${sftp.port}`}>
-                                    <Button.Text variant={Button.Variants.Secondary}>Launch SFTP</Button.Text>
+
+                                <a 
+                                    href={`sftp://${username}.${id}@${ip(sftp.ip)}:${sftp.port}`}
+                                    className="block"
+                                >
+                                    <Button className="w-full bg-zb-accent text-black font-bold py-3 rounded-xl shadow-zb-glow-sm hover:shadow-zb-glow-md transition-all duration-300">
+                                        Launch SFTP
+                                    </Button>
                                 </a>
                             </div>
                         </div>
-                    </TitledGreyBox>
+                    </div>
                 </Can>
             </div>
         </PageContentBlock>

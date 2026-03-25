@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import tw from 'twin.macro';
 
 import { ServerContext } from '@/state/server';
 import { encodePathSegments } from '@/lib/helpers';
@@ -47,35 +46,45 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
     };
 
     return (
-        <div css={tw`flex flex-grow-0 items-center text-sm text-neutral-500 overflow-x-hidden`}>
-            {renderLeft || <div css={tw`w-12`} />}/
-            <NavLink to={`/server/${id}/files`} css={tw`px-1 text-neutral-200 no-underline hover:text-neutral-100`}>
-                root
-            </NavLink>
-            /
-            {breadcrumbs().map((crumb, index) =>
-                crumb.path ? (
+        <div className="flex flex-grow items-center text-sm overflow-x-auto no-scrollbar py-2">
+            <div className="flex items-center gap-x-2">
+                {renderLeft}
+                <NavLink
+                    to={`/server/${id}/files`}
+                    className="flex items-center gap-x-2 px-3 py-1.5 rounded-lg bg-zb-card/40 backdrop-blur-md border border-white/5 text-zb-text-dim no-underline hover:text-zb-accent hover:border-zb-accent/30 transition-all duration-300"
+                >
+                    <span className="text-zb-accent/60">root</span>
+                </NavLink>
+                {directory !== '.' && <span className="text-zb-muted/40">/</span>}
+            </div>
+            <div className="flex items-center gap-x-2 ml-2">
+                {breadcrumbs().map((crumb, index) => (
                     <Fragment key={index}>
-                        <NavLink
-                            to={`/server/${id}/files#${encodePathSegments(crumb.path)}`}
-                            css={tw`px-1 text-neutral-200 no-underline hover:text-neutral-100`}
-                            end
-                        >
-                            {crumb.name}
-                        </NavLink>
-                        /
+                        {crumb.path ? (
+                            <NavLink
+                                to={`/server/${id}/files#${encodePathSegments(crumb.path)}`}
+                                className="px-3 py-1.5 rounded-lg bg-zb-card/40 backdrop-blur-md border border-white/5 text-zb-text-dim no-underline hover:text-zb-accent hover:border-zb-accent/30 transition-all duration-300 whitespace-nowrap"
+                                end
+                            >
+                                {crumb.name}
+                            </NavLink>
+                        ) : (
+                            <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-zb-text whitespace-nowrap font-bold shadow-zb-glow-sm/10">
+                                {crumb.name}
+                            </span>
+                        )}
+                        {index < breadcrumbs().length - 1 && <span className="text-zb-muted/40">/</span>}
                     </Fragment>
-                ) : (
-                    <span key={index} css={tw`px-1 text-neutral-300`}>
-                        {crumb.name}
-                    </span>
-                ),
-            )}
-            {file && (
-                <Fragment>
-                    <span css={tw`px-1 text-neutral-300`}>{file}</span>
-                </Fragment>
-            )}
+                ))}
+                {file && (
+                    <>
+                        <span className="text-zb-muted/40">/</span>
+                        <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-zb-text whitespace-nowrap font-bold shadow-zb-glow-sm/10">
+                            {file}
+                        </span>
+                    </>
+                )}
+            </div>
         </div>
     );
 };

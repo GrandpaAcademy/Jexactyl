@@ -54,8 +54,14 @@ export default ({ roleId, onDeleted }: Props) => {
                 You must create a new role and assign it to each user in order to give them access again.
             </Dialog.Confirm>
 
-            <Button.Danger type={'button'} size={Button.Sizes.Small} onClick={() => setVisible(true)}>
-                <FontAwesomeIcon icon={faTrash} />
+            <Button.Danger
+                type={'button'}
+                size={Button.Sizes.Small}
+                onClick={() => setVisible(true)}
+                className="shadow-zb-glow-sm/20 hover:shadow-zb-glow-md/30 transition-shadow duration-300"
+            >
+                <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                <span>Delete Tier</span>
             </Button.Danger>
         </>
     );

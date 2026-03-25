@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import tw from 'twin.macro';
 import FlashMessageRender from '@/elements/FlashMessageRender';
 
 const AdminContentBlock: React.FC<{
@@ -15,17 +14,18 @@ const AdminContentBlock: React.FC<{
 
     return (
         <>
-            {showFlashKey && <FlashMessageRender byKey={showFlashKey} css={tw`mb-4`} />}
+            {showFlashKey && <FlashMessageRender byKey={showFlashKey} className="mb-6" />}
             {children}
-            <p css={tw`text-center text-neutral-500 text-xs mt-4 mb-8`}>
+            <p className="text-center text-neutral-500 text-xs mt-12 mb-8">
                 &copy; {new Date().getFullYear()}&nbsp;
                 <a
                     rel={'noopener nofollow noreferrer'}
-                    href={'https://jexpanel.com'}
+                    href={'https://zero-bot.net'}
                     target={'_blank'}
-                    css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
+                    className="no-underline text-neutral-500 hover:text-neutral-300 transition-colors duration-300 flex items-center justify-center gap-x-2"
                 >
-                    Jexpanel.com
+                    <img src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'} className={'w-3 h-3'} alt={'Zero-Bot'} />
+                    Zero-Bot.net
                 </a>
             </p>
         </>

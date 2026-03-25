@@ -7,13 +7,10 @@ import { useChart, useChartTickLabel } from '@server/console/chart';
 import { hexToRgba } from '@/lib/helpers';
 import { bytesToString } from '@/lib/formatters';
 import { CloudDownloadIcon, CloudUploadIcon } from '@heroicons/react/solid';
-import { theme } from 'twin.macro';
 import ChartBlock from '@server/console/ChartBlock';
 import Tooltip from '@/elements/tooltip/Tooltip';
-import { useStoreState } from '@/state/hooks';
 
 export default () => {
-    const { primary } = useStoreState(state => state.theme.data!.colors);
     const status = ServerContext.useStoreState(state => state.status.value);
     const limits = ServerContext.useStoreState(state => state.server.data!.limits);
     const previous = useRef<Record<'tx' | 'rx', number>>({ tx: -1, rx: -1 });
@@ -37,8 +34,11 @@ export default () => {
             return {
                 ...opts,
                 label: !index ? 'Network In' : 'Network Out',
-                borderColor: !index ? theme('colors.cyan.400') : primary,
-                backgroundColor: hexToRgba(!index ? theme('colors.cyan.700') : primary, 0.5),
+                borderColor: !index ? 'rgba(0, 240, 255, 0.8)' : 'rgba(124, 58, 237, 0.8)',
+                backgroundColor: hexToRgba(!index ? '#00F0FF' : '#7C3AED', 0.15),
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
             };
         },
     });
@@ -69,28 +69,34 @@ export default () => {
     });
 
     return (
-        <>
-            <ChartBlock title={'CPU'}>
+        <div className="space-y-4">
+            <ChartBlock title={'CPU Usage'}>
                 <Line {...cpu.props} />
             </ChartBlock>
-            <ChartBlock title={'Memory'}>
+            <ChartBlock title={'Memory Usage'}>
                 <Line {...memory.props} />
             </ChartBlock>
             <ChartBlock
-                title={'Network'}
+                title={'Network Activity'}
                 legend={
-                    <>
+                    <div className="flex items-center gap-x-4">
                         <Tooltip arrow content={'Inbound'}>
-                            <CloudDownloadIcon className={'mr-2 h-4 w-4 text-green-400'} />
+                            <div className="flex items-center gap-x-2">
+                                <CloudDownloadIcon className={'h-4 w-4 text-zb-accent'} />
+                                <span className="text-[10px] uppercase font-bold tracking-wider">Inbound</span>
+                            </div>
                         </Tooltip>
                         <Tooltip arrow content={'Outbound'}>
-                            <CloudUploadIcon className={'h-4 w-4 text-cyan-400'} />
+                            <div className="flex items-center gap-x-2">
+                                <CloudUploadIcon className={'h-4 w-4 text-zb-accent-2'} />
+                                <span className="text-[10px] uppercase font-bold tracking-wider">Outbound</span>
+                            </div>
                         </Tooltip>
-                    </>
+                    </div>
                 }
             >
                 <Line {...network.props} />
             </ChartBlock>
-        </>
+        </div>
     );
 };

@@ -1,7 +1,6 @@
 import type { FormikHelpers } from 'formik';
 import { Form, Formik } from 'formik';
 import { join } from 'pathe';
-import tw from 'twin.macro';
 import { object, string } from 'yup';
 
 import { Button } from '@/elements/button';
@@ -50,8 +49,8 @@ export default ({ onFileNamed, onDismissed, ...props }: Props) => {
                             description={'Enter the name that this file should be saved as.'}
                             autoFocus
                         />
-                        <div css={tw`mt-6 text-right`}>
-                            <Button>Create File</Button>
+                        <div className="mt-8 flex justify-end">
+                            <Button className="shadow-zb-glow-sm/20 px-8">Confirm</Button>
                         </div>
                     </Form>
                 </Modal>

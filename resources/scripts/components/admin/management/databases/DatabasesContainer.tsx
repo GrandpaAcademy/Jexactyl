@@ -34,28 +34,30 @@ export default ({ filters }: Props) => {
     };
 
     return (
-        <AdminContentBlock>
-            <Dialog title={'Create a New Database'} open={open} onClose={() => setOpen(false)} size={'lg'}>
+        <AdminContentBlock title={'Database Hosts'}>
+            <Dialog title={'Provision New Database Infrastructure'} open={open} onClose={() => setOpen(false)} size={'lg'}>
                 <InformationContainer title={'Information'} onSubmit={submit} />
             </Dialog>
-            <div className={'w-full flex flex-row items-center mb-8'}>
-                <div className={'flex flex-col flex-shrink'} style={{ minWidth: '0' }}>
-                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Database Hosts</h2>
-                    <p className={'hidden lg:block text-base text-neutral-400 whitespace-nowrap'}>
-                        Modify node database hosts linked to the Panel.
+
+            <div className="w-full flex flex-col md:flex-row items-center mb-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left">
+                    <h2 className="text-3xl text-neutral-50 font-semibold tracking-tight uppercase tracking-widest">Database Hosts</h2>
+                    <p className="text-sm text-neutral-400 mt-1 opacity-70">
+                        Configure and manage remote database environments linked to your infrastructure.
                     </p>
                 </div>
-                <div className={'w-full text-right mb-4'}>
+
+                <div className="flex items-center gap-4">
                     <Button
-                        icon={PlusIcon}
-                        size={Button.Sizes.Large}
                         onClick={() => setOpen(true)}
-                        className={'h-10 px-4 py-0 whitespace-nowrap'}
+                        className="shadow-zb-glow-sm/20 px-8 py-2.5 h-auto font-medium flex items-center gap-2 group"
                     >
-                        New Database Host
+                        <PlusIcon className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+                        <span>Provision Host</span>
                     </Button>
                 </div>
             </div>
+
             <DatabasesContext.Provider value={hooks}>
                 <DatabasesTable />
             </DatabasesContext.Provider>

@@ -41,8 +41,11 @@ export default () => {
                     <div className="flex flex-col items-center text-center">
                         {stage === 1 && (
                             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                <div className="inline-block px-4 py-1.5 rounded-full bg-zb-accent/10 border border-zb-accent/20 text-zb-accent text-xs font-bold uppercase tracking-[0.2em] mb-4">
-                                    System Initialization
+                                <div className="flex flex-col items-center gap-y-4 mb-4">
+                                    <img src={'https://xxxxxcdn.zero-bot.net/logo-icon.svg'} className={'w-24 h-24 drop-shadow-zb-glow'} alt={'Zero-Bot Logo'} />
+                                    <div className="inline-block px-4 py-1.5 rounded-full bg-zb-accent/10 border border-zb-accent/20 text-zb-accent text-xs font-bold uppercase tracking-[0.2em]">
+                                        System Initialization
+                                    </div>
                                 </div>
                                 <h1 className="text-6xl lg:text-8xl font-black tracking-tighter text-white leading-tight">
                                     Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-br from-zb-accent to-zb-success drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">Zero-Bot</span>
