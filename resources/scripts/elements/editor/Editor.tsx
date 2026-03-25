@@ -80,7 +80,7 @@ const defaultExtensions: Extension = [
     indentUnit.of('\t'),
 ];
 
-const EditorContainer = styled.div<{ overrides?: TwStyle }>`
+const EditorContainer = styled.div<{ overrides?: TwStyle | string }>`
     //min-height: 12rem;
     ${tw`relative`};
 
@@ -97,7 +97,7 @@ export interface EditorProps {
     // DOM
     className?: string;
     style?: CSSProperties;
-    childClassName?: TwStyle;
+    childClassName?: TwStyle | string;
 
     // CodeMirror Config
     extensions?: Extension[];

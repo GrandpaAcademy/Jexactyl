@@ -1,7 +1,5 @@
 import tw from 'twin.macro';
 import styled from 'styled-components';
-import { SiteTheme } from '@/state/theme';
-import { useStoreState } from '@/state/hooks';
 import { ReactNode } from 'react';
 
 interface Props {
@@ -10,23 +8,20 @@ interface Props {
     className?: string;
 }
 
-const GreyRowBox = styled.div<{ $hoverable?: boolean; theme: SiteTheme }>`
-    ${tw`flex rounded no-underline text-neutral-200 items-center p-4 border border-transparent transition-colors duration-150 overflow-hidden`};
+const GreyRowBox = styled.div<{ $hoverable?: boolean }>`
+    ${tw`flex rounded-xl no-underline text-zb-text items-center p-4 border border-white/5 transition-all duration-250 overflow-hidden`};
+    ${tw`bg-white/5 shadow-lg`};
 
-    background-color: ${({ theme }) => theme.colors.secondary};
-
-    ${props => props.$hoverable !== false && tw`hover:border-neutral-500`};
+    ${props => props.$hoverable !== false && tw`hover:border-zb-accent/40 hover:bg-white/[0.08] hover:shadow-zb-glow`};
 
     & .icon {
-        ${tw`rounded-full w-16 flex items-center justify-center bg-neutral-500 p-3`};
+        ${tw`rounded-full w-12 h-12 flex items-center justify-center bg-zb-accent/10 text-zb-accent border border-zb-accent/20 p-3 shadow-zb-glow`};
     }
 `;
 
 export default (props: Props) => {
-    const theme = useStoreState(state => state.theme.data!);
-
     return (
-        <GreyRowBox $hoverable={props.$hoverable} theme={theme} className={props.className}>
+        <GreyRowBox $hoverable={props.$hoverable} className={props.className}>
             {props.children}
         </GreyRowBox>
     );

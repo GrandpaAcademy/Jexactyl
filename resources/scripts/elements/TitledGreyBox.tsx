@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import tw from 'twin.macro';
 import isEqual from 'react-fast-compare';
-import { useStoreState } from '@/state/hooks';
 
 interface Props {
     icon?: IconProp;
@@ -14,21 +13,19 @@ interface Props {
 }
 
 const TitledGreyBox = ({ icon, title, children, className }: Props) => {
-    const { colors } = useStoreState(state => state.theme.data!);
-
     return (
-        <div css={tw`shadow-md`} style={{ backgroundColor: colors.secondary }} className={className}>
-            <div css={tw`p-3 border-b border-black`} style={{ backgroundColor: colors.headers }}>
+        <div css={tw`rounded-xl overflow-hidden shadow-2xl bg-zb-card/40 backdrop-blur-xl border border-white/5 transition-all duration-250`} className={className}>
+            <div css={tw`p-4 border-b border-white/10 bg-zb-accent/5 flex items-center`}>
                 {typeof title === 'string' ? (
-                    <p css={tw`text-sm font-semibold`}>
-                        {icon && <FontAwesomeIcon icon={icon} css={tw`mr-2 text-neutral-300`} />}
+                    <p css={tw`text-sm font-bold text-zb-text tracking-wide uppercase`}>
+                        {icon && <FontAwesomeIcon icon={icon} css={tw`mr-3 text-zb-accent shadow-zb-glow animate-pulse-slow`} />}
                         {title}
                     </p>
                 ) : (
                     title
                 )}
             </div>
-            <div css={tw`p-3`}>{children}</div>
+            <div css={tw`p-6 text-zb-text`}>{children}</div>
         </div>
     );
 };

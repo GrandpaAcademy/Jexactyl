@@ -1,35 +1,30 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { useStoreState } from '@/state/hooks';
+import classNames from 'classnames';
 import { UsePaginationResult } from '@/plugins/usePagination';
 import { Button } from './button';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Header = ({ children }: { children: ReactNode }) => {
-    const { colors } = useStoreState(s => s.theme.data!);
-
     return (
-        <thead className={'text-xs uppercase text-gray-400'} style={{ backgroundColor: colors.headers }}>
+        <thead className={'text-[11px] uppercase text-zb-muted bg-white/5 tracking-widest'}>
             <tr>{children}</tr>
         </thead>
     );
 };
 
-const HeaderItem = ({ children }: { children: ReactNode }) => <th className={'px-6 py-3'}>{children}</th>;
+const HeaderItem = ({ children }: { children: ReactNode }) => <th className={'px-6 py-4 font-bold border-b border-white/5'}>{children}</th>;
 
-const Body = ({ children }: { children: ReactNode }) => <tbody>{children}</tbody>;
+const Body = ({ children }: { children: ReactNode }) => <tbody className="bg-white/[0.02]">{children}</tbody>;
 
 const BodyItem = ({ item, to, children }: { item: string; to?: string; children: ReactNode }) => {
-    const { colors } = useStoreState(s => s.theme.data!);
-
     return (
-        <tr className={'border-b-2 border-gray-700'} style={{ backgroundColor: colors.secondary }}>
+        <tr className={'border-b border-white/5 hover:bg-white/5 transition-all duration-200 group'}>
             <th
-                style={{ color: colors.primary }}
-                className={'px-6 py-4 font-bold whitespace-nowrap hover:brightness-150 duration-300'}
+                className={'px-6 py-4 font-bold text-zb-accent whitespace-nowrap group-hover:brightness-125 transition-all duration-250'}
             >
-                {to ? <Link to={to}>{item}</Link> : item}
+                {to ? <Link to={to} className="hover:underline">{item}</Link> : item}
             </th>
             {children}
         </tr>
@@ -43,28 +38,26 @@ const PaginatedFooter = ({
     pagination: UsePaginationResult<any>;
     noBackground?: boolean;
 }) => {
-    const { colors } = useStoreState(s => s.theme.data!);
-
     return (
         <div
-            style={{ backgroundColor: !noBackground ? colors.secondary : 'transparent' }}
-            className={'rounded-b-lg py-2 px-4'}
+            className={classNames('py-4 px-6 border-t border-white/5 flex items-center justify-between', !noBackground && 'bg-zb-accent/5 rounded-b-2xl')}
         >
-            <div className={'flex justify-between space-x-2'}>
-                <p className={'text-xs font-bold text-gray-400 my-auto'}>
-                    Showing <span className={'text-white'}>{pagination.startIndex + 1}</span> to{' '}
-                    <span className={'text-white'}>{pagination.endIndex}</span> of{' '}
-                    <span className={'text-white'}>{pagination.totalItems}</span> results
+            <p className={'text-xs font-bold text-zb-muted uppercase tracking-wider'}>
+                Showing <span className={'text-zb-text'}>{pagination.startIndex + 1}</span> to{' '}
+                <span className={'text-zb-text'}>{pagination.endIndex}</span> of{' '}
+                <span className={'text-zb-text'}>{pagination.totalItems}</span> results
+            </p>
+            <div className={'flex items-center gap-x-4'}>
+                <p className={'text-xs font-bold text-zb-muted uppercase tracking-wider'}>
+                    Page <span className={'text-zb-accent'}>{pagination.currentPage}</span> of{' '}
+                    <span className={'text-zb-text'}>{pagination.totalPages}</span>
                 </p>
-                <div className={'inline-flex'}>
-                    <p className={'text-xs font-bold text-gray-400 my-auto mr-2'}>
-                        Page <span className={'text-white'}>{pagination.currentPage}</span> of{' '}
-                        <span className={'text-white'}>{pagination.totalPages}</span>
-                    </p>
+                <div className={'flex gap-x-2'}>
                     <Button.Text
                         disabled={pagination.currentPage === 1}
                         size={Button.Sizes.Small}
                         onClick={pagination.goToPreviousPage}
+                        className="!p-2 rounded-lg"
                     >
                         <FontAwesomeIcon icon={faChevronLeft} />
                     </Button.Text>
@@ -72,6 +65,7 @@ const PaginatedFooter = ({
                         disabled={pagination.currentPage === pagination.totalPages}
                         size={Button.Sizes.Small}
                         onClick={pagination.goToNextPage}
+                        className="!p-2 rounded-lg"
                     >
                         <FontAwesomeIcon icon={faChevronRight} />
                     </Button.Text>
@@ -82,12 +76,10 @@ const PaginatedFooter = ({
 };
 
 const Table = ({ children }: { children: ReactNode[] }) => {
-    const { colors } = useStoreState(s => s.theme.data!);
-
     return (
-        <div className={'relative overflow-x-auto'}>
-            <div className={'py-5 rounded-t-lg'} style={{ backgroundColor: colors.secondary }}></div>
-            <table className={'w-full text-sm text-left text-gray-400'}>{children}</table>
+        <div className={'relative overflow-hidden rounded-2xl border border-white/5 bg-zb-card/30 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:shadow-zb-glow/20'}>
+            <div className={'py-1 bg-zb-gradient-horizontal opacity-50'}></div>
+            <table className={'w-full text-sm text-left text-zb-text-dim'}>{children}</table>
         </div>
     );
 };

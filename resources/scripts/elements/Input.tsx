@@ -1,4 +1,3 @@
-import { useStoreState } from '@/state/hooks';
 import styled, { css } from 'styled-components';
 import tw from 'twin.macro';
 
@@ -30,20 +29,25 @@ const checkboxStyle = css<Props>`
 `;
 
 const inputStyle = () => {
-    const theme = useStoreState(state => state.theme.data!);
-
     return css<Props>`
         // Reset to normal styling.
         resize: none;
         ${tw`appearance-none outline-none w-full min-w-0`};
-        ${tw`py-2.5 px-3 border-2 rounded text-sm transition-all duration-150`};
-        ${tw`border-zinc-700 hover:border-neutral-400 text-neutral-200 shadow-none`};
+        ${tw`py-2.5 px-3 border-2 rounded-lg transition-all duration-250`};
+        ${tw`bg-white/5 border-white/10 text-zb-text shadow-none`};
 
-        background-color: ${theme.colors.secondary};
+        &:hover:not(:disabled):not(:read-only) {
+            ${tw`border-white/20 bg-white/[0.08]`};
+        }
+
+        &:focus {
+            ${tw`border-zb-accent/50 bg-white/[0.08]`};
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
 
         & + .input-help {
             ${tw`mt-1 text-xs`};
-            ${props => (props.hasError ? tw`text-red-200` : tw`text-neutral-200`)};
+            ${props => (props.hasError ? tw`text-zb-danger` : tw`text-zb-text-dim`)};
         }
 
         &:required,
@@ -52,7 +56,7 @@ const inputStyle = () => {
         }
 
         &:disabled {
-            ${tw`opacity-75`};
+            ${tw`opacity-50 cursor-not-allowed`};
         }
 
         ${props =>
@@ -60,10 +64,10 @@ const inputStyle = () => {
                 ? light
                 : css`
                       &:not(.ignoreReadOnly):read-only {
-                          ${tw`border-neutral-800 bg-neutral-900`};
+                          ${tw`border-white/5 bg-white/[0.02] text-zb-muted`};
                       }
                   `};
-        ${props => props.hasError && tw`text-red-100 border-red-400 hover:border-red-300`};
+        ${props => props.hasError && tw`text-zb-danger border-zb-danger/50 hover:border-zb-danger`};
     `;
 };
 

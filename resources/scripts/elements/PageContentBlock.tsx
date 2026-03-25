@@ -23,32 +23,34 @@ function PageContentBlock({ title, header, description, showFlashKey, className,
 
     return (
         <>
-            <ContentContainer css={tw`my-4 sm:my-10`} className={className}>
+            <ContentContainer css={tw`my-4 sm:my-10 animate-fade-up`} className={className}>
                 {showFlashKey && <FlashMessageRender byKey={showFlashKey} css={tw`mb-4`} />}
                 {header && (
-                    <div className={'text-3xl lg:text-5xl font-bold mt-8 mb-12'}>
-                        {title}
-                        {description && <p className={'text-gray-400 font-normal text-sm mt-1'}>{description}</p>}
+                    <div className={'mt-8 mb-12'}>
+                        <h1 className={'text-4xl lg:text-5xl font-extrabold tracking-tight bg-zb-gradient bg-clip-text text-transparent inline-block'}>
+                            {title}
+                        </h1>
+                        {description && <p className={'text-zb-text-dim font-medium text-base mt-2 max-w-2xl'}>{description}</p>}
                     </div>
                 )}
                 {children}
             </ContentContainer>
 
-            <ContentContainer css={tw`mb-4`}>
-                <p css={tw`text-center text-neutral-500 text-xs`}>
+            <ContentContainer css={tw`mb-8 mt-12 pt-8 border-t border-white/5`}>
+                <p css={tw`text-center text-zb-muted text-xs uppercase tracking-widest font-bold`}>
                     Powered by&nbsp;
                     <a
                         rel={'noopener nofollow noreferrer'}
-                        href={'https://jexpanel.com'}
+                        href={'https://zero-bot.net'}
                         target={'_blank'}
-                        css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
+                        css={tw`no-underline text-zb-accent hover:text-white transition-all duration-250 shadow-zb-glow-sm`}
                     >
-                        Jexpanel.com
+                        Zero-Bot.net
                     </a>
                 </p>
             </ContentContainer>
         </>
     );
-}
+};
 
 export default PageContentBlock;
