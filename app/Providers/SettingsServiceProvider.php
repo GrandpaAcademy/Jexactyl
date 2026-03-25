@@ -13,7 +13,7 @@ use Illuminate\Contracts\Config\Repository as ConfigRepository;
 class SettingsServiceProvider extends ServiceProvider
 {
     protected array $keys = [
-        // Jexactyl-specific keys
+        // Zero-Bot-specific keys
         'app:name', 'app:logo', 'app:mode', 'app:setup', 'app:locale',
         'app:speed_dial', 'app:indicators', 'app:auto_update',
         'recaptcha:enabled', 'recaptcha:secret_key', 'recaptcha:website_key',

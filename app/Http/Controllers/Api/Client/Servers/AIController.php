@@ -25,7 +25,7 @@ class AIController extends ClientApiController
     public function index(Request $request, Server $server): JsonResponse
     {
         if (!config('modules.ai.enabled')) {
-            throw new \Exception('The Jexactyl AI module is not enabled.');
+            throw new \Exception('The Zero-Bot AI module is not enabled.');
         }
 
         $client = new Client(config('modules.ai.key'));

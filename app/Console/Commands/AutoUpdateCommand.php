@@ -15,13 +15,13 @@ class AutoUpdateCommand extends Command
         {--user= : The user that PHP runs under. All files will be owned by this user.}
         {--group= : The group that PHP runs under. All files will be owned by this group.}
         {--url= : The specific archive to download.}
-        {--release= : A specific Jexactyl version to download from GitHub. Leave blank to use latest.}';
+        {--release= : A specific Zero-Bot version to download from GitHub. Leave blank to use latest.}';
 
-    protected $description = 'Downloads a new archive for Jexactyl from GitHub and then executes the normal upgrade commands.';
+    protected $description = 'Downloads a new archive for Zero-Bot from GitHub and then executes the normal upgrade commands.';
 
     /**
      * Executes an upgrade command which will run through all of our standard
-     * commands for Jexactyl and enable users to basically just download
+     * commands for Zero-Bot and enable users to basically just download
      * the archive and execute this and be done.
      *
      * @throws \Exception

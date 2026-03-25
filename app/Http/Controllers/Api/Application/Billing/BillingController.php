@@ -36,7 +36,7 @@ class BillingController extends ApplicationApiController
         if (strpos($request['key'], 'keys:') !== 0) {
             Activity::event('admin:billing:update')
                 ->property('settings', $request->all())
-                ->description('Jexactyl billing settings were updated')
+                ->description('Zero-Bot billing settings were updated')
                 ->log();
         }
 

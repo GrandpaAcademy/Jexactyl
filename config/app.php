@@ -17,7 +17,7 @@ return [
     |--------------------------------------------------------------------------
     | Automatic Updates
     |--------------------------------------------------------------------------
-    | Allow Jexactyl to update itself in the background in line with the latest
+    | Allow Zero-Bot to update itself in the background in line with the latest
     | GitHub software release. This feature is off by default.
     */
     'auto_update' => false,
@@ -27,7 +27,7 @@ return [
     | Admin Indicators
     |--------------------------------------------------------------------------
     | Allow the panel to display small indicators in the top-right of the UI
-    | when certain Jexactyl features are toggled to 'on'.
+    | when certain Zero-Bot features are toggled to 'on'.
     */
     'indicators' => false,
 
@@ -35,10 +35,10 @@ return [
     |--------------------------------------------------------------------------
     | Is Setup
     |--------------------------------------------------------------------------
-    | This variable toggles whether Jexactyl has been configured and is ready
+    | This variable toggles whether Zero-Bot has been configured and is ready
     | for use. This should ideally be done via the UI.
     */
-    'auto_update' => false,
+    'setup' => env('APP_SETUP', false),
 
     /*
     |--------------------------------------------------------------------------
