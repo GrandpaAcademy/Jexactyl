@@ -1,7 +1,6 @@
 import { action, Action, Actions, createContextStore, useStoreActions } from 'easy-peasy';
 import { Form, Formik, FormikHelpers } from 'formik';
-import React, { useEffect, useState } from 'react';
-import tw from 'twin.macro';
+import { useEffect, useState } from 'react';
 import { object, string } from 'yup';
 import { getRole, updateRole } from '@/api/routes/admin/roles';
 import FlashMessageRender from '@/elements/FlashMessageRender';
@@ -78,37 +77,34 @@ const EditInformationContainer = () => {
             })}
         >
             {({ isSubmitting, isValid }) => (
-                <React.Fragment>
-                    <AdminBox title={'Edit Role'} css={tw`relative mb-6`} icon={faPencil}>
+                <div className="relative mb-6">
+                    <AdminBox title={'Edit Role'} className="bg-zb-card/30 backdrop-blur-md border-white/5 shadow-xl rounded-2xl" icon={faPencil}>
                         <SpinnerOverlay visible={isSubmitting} />
 
-                        <Form css={tw`mb-0`}>
-                            <div>
+                        <Form className="m-0">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Field id={'name'} name={'name'} label={'Name'} type={'text'} />
+                                <Field id={'color'} type={'color'} name={'color'} label={'Identity Color'} />
                             </div>
 
-                            <div css={tw`mt-6`}>
+                            <div className="mt-6">
                                 <Field id={'description'} name={'description'} label={'Description'} type={'text'} />
                             </div>
 
-                            <div css={tw`mt-6`}>
-                                <Field id={'color'} type={'color'} name={'color'} label={'Color'} />
-                            </div>
-
-                            <div css={tw`w-full flex flex-row items-center mt-6`}>
-                                <div css={tw`flex`}>
+                            <div className="w-full flex flex-row items-center mt-10 p-4 bg-white/5 rounded-xl border border-white/5">
+                                <div className="flex">
                                     <RoleDeleteButton roleId={role.id} onDeleted={() => navigate('/admin/roles')} />
                                 </div>
 
-                                <div css={tw`flex ml-auto`}>
-                                    <Button type={'submit'} disabled={isSubmitting || !isValid}>
+                                <div className="ml-auto">
+                                    <Button type={'submit'} disabled={isSubmitting || !isValid} className="shadow-zb-glow-sm/20 px-8">
                                         Save Changes
                                     </Button>
                                 </div>
                             </div>
                         </Form>
                     </AdminBox>
-                </React.Fragment>
+                </div>
             )}
         </Formik>
     );
@@ -140,9 +136,9 @@ const RoleEditContainer = () => {
     if (loading || role === undefined) {
         return (
             <AdminContentBlock>
-                <FlashMessageRender byKey={'role'} css={tw`mb-4`} />
+                <FlashMessageRender byKey={'role'} className="mb-4" />
 
-                <div css={tw`w-full flex flex-col items-center justify-center`} style={{ height: '24rem' }}>
+                <div className="w-full flex flex-col items-center justify-center h-96">
                     <Spinner size={'base'} />
                 </div>
             </AdminContentBlock>
@@ -151,35 +147,45 @@ const RoleEditContainer = () => {
 
     return (
         <AdminContentBlock title={'Role - ' + role.name}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2
-                        css={tw`text-2xl text-neutral-50 font-header font-medium`}
-                        style={{ color: role.color ?? 'white' }}
-                    >
-                        {role.name}
-                    </h2>
-                    {(role.description || '').length < 1 ? (
-                        <p css={tw`text-base text-neutral-400`}>
-                            <span css={tw`italic`}>No description</span>
+            <div className="w-full flex flex-col md:flex-row items-center mb-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left">
+                    <div className="flex items-center gap-3 justify-center md:justify-start">
+                        <div 
+                            className="w-3 h-3 rounded-full shadow-[0_0_10px_rgba(0,242,255,0.5)]" 
+                            style={{ backgroundColor: role.color ?? '#00f2ff', boxShadow: `0 0 15px ${role.color ?? '#00f2ff'}60` }}
+                        />
+                        <h2
+                            className="text-4xl text-neutral-50 font-semibold tracking-tight uppercase tracking-widest"
+                            style={{ color: role.color ?? 'white' }}
+                        >
+                            {role.name}
+                        </h2>
+                    </div>
+                    {+(role.description || '').length < 1 ? (
+                        <p className="text-sm text-neutral-400 mt-1 italic opacity-50">
+                            No description provided for this tier.
                         </p>
                     ) : (
-                        <p css={tw`text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}>
+                        <p className="text-sm text-neutral-400 mt-1 opacity-70 max-w-2xl">
                             {role.description}
                         </p>
                     )}
                 </div>
             </div>
-            <FlashMessageRender byKey={'role'} css={tw`mb-4`} />
+
+            <FlashMessageRender byKey={'role'} className="mb-6 rounded-2xl overflow-hidden shadow-lg border border-white/5" />
+            
             <EditInformationContainer />
-            <div css={tw`w-full flex flex-row items-center my-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Role Permissions</h2>
-                    <p css={tw`text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}>
-                        This table contains the permissions that you can assign to the role.
+
+            <div className="w-full flex flex-col md:flex-row items-center my-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left border-l-2 border-zb-accent pl-6">
+                    <h2 className="text-2xl text-neutral-50 font-semibold tracking-tight uppercase tracking-widest">Role Permissions</h2>
+                    <p className="text-sm text-neutral-400 mt-1 opacity-70">
+                        Manage granular access controls and entitlement nodes for this administrative tier.
                     </p>
                 </div>
             </div>
+
             <PermissionsTable role={role} />
         </AdminContentBlock>
     );

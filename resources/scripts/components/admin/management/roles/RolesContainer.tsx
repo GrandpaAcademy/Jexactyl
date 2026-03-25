@@ -5,7 +5,6 @@ import NewRoleButton from '@/components/admin/management/roles/NewRoleButton';
 import FlashMessageRender from '@/elements/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
 import { NavLink } from 'react-router-dom';
-import tw from 'twin.macro';
 import AdminContentBlock from '@/elements/AdminContentBlock';
 import AdminTable, {
     TableBody,
@@ -19,14 +18,11 @@ import AdminTable, {
     useTableHooks,
 } from '@/elements/AdminTable';
 import CopyOnClick from '@/elements/CopyOnClick';
-import { useStoreState } from '@/state/hooks';
 
 const RolesContainer = () => {
-    const { page, setPage, setFilters, sort, setSort, sortDirection } = useContext(RolesContext);
+    const { setPage, setFilters, sort, setSort, sortDirection } = useContext(RolesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: roles, error, isValidating } = getRoles();
-
-    const { colors } = useStoreState(state => state.theme.data!);
 
     useEffect(() => {
         if (!error) {
@@ -54,30 +50,30 @@ const RolesContainer = () => {
 
     useEffect(() => {
         setSelectedRoles([]);
-    }, [page]);
+    }, [roles?.pagination.currentPage]);
 
     return (
         <AdminContentBlock title={'Roles'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Administrator Roles</h2>
-                    <p css={tw`text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}>
-                        Roles are sets of permissions that you can assign to your panel administrators.
+            <div className="w-full flex flex-col md:flex-row items-center mb-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left">
+                    <h2 className="text-3xl text-neutral-50 font-semibold tracking-tight uppercase tracking-widest">Administrator Roles</h2>
+                    <p className="text-sm text-neutral-400 mt-1 opacity-70">
+                        Define administrative permission tiers for governance and security control.
                     </p>
                 </div>
 
-                <div css={tw`flex ml-auto pl-4`}>
+                <div className="flex items-center gap-4">
                     <NewRoleButton />
                 </div>
             </div>
 
-            <FlashMessageRender byKey={'roles'} css={tw`mb-4`} />
+            <FlashMessageRender byKey={'roles'} className="mb-6 rounded-2xl overflow-hidden shadow-lg border border-white/5" />
 
             <AdminTable>
                 <ContentWrapper onSearch={onSearch}>
                     <Pagination data={roles} onPageSelect={setPage}>
-                        <div css={tw`overflow-x-auto`}>
-                            <table css={tw`w-full table-auto`}>
+                        <div className="overflow-x-auto no-scrollbar">
+                            <table className="w-full border-separate border-spacing-y-2">
                                 <TableHead>
                                     <TableHeader
                                         name={'ID'}
@@ -85,12 +81,12 @@ const RolesContainer = () => {
                                         onClick={() => setSort('id')}
                                     />
                                     <TableHeader
-                                        name={'Name'}
+                                        name={'Permission Tier'}
                                         direction={sort === 'name' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('name')}
                                     />
                                     <TableHeader name={'Description'} />
-                                    <TableHeader name={'Permission Count'} />
+                                    <TableHeader name={'Entitlements'} />
                                 </TableHead>
 
                                 <TableBody>
@@ -99,31 +95,35 @@ const RolesContainer = () => {
                                         !isValidating &&
                                         length > 0 &&
                                         roles.items.map(role => (
-                                            <TableRow key={role.id}>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <TableRow key={role.id} className="group bg-zb-card/30 backdrop-blur-md hover:bg-white/5 transition-all duration-300">
+                                                <td className="px-6 py-4 text-sm first:rounded-l-2xl">
                                                     <CopyOnClick text={role.id.toString()}>
-                                                        <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                        <code className="font-mono bg-black/40 text-zb-accent px-2 py-1 rounded-md border border-white/5 group-hover:border-zb-accent/30 transition-colors uppercase">
                                                             {role.id}
                                                         </code>
                                                     </CopyOnClick>
                                                 </td>
 
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm font-medium">
                                                     <NavLink
                                                         to={`${window.location.pathname}/${role.id}`}
-                                                        style={{ color: role.color ?? colors.primary }}
-                                                        className={'hover:brightness-125 duration-300'}
+                                                        style={{ color: role.color ?? '#00f2ff' }}
+                                                        className="hover:brightness-125 transition-all duration-300 flex items-center gap-2"
                                                     >
+                                                        <div 
+                                                            className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,242,255,0.5)]" 
+                                                            style={{ backgroundColor: role.color ?? '#00f2ff', boxShadow: `0 0 10px ${role.color ?? '#00f2ff'}40` }}
+                                                        />
                                                         {role.name}
                                                     </NavLink>
                                                 </td>
 
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm text-neutral-400">
                                                     {role.description}
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
-                                                        {role.permissions.length}
+                                                <td className="px-6 py-4 last:rounded-r-2xl text-sm">
+                                                    <code className="font-mono bg-white/5 text-neutral-300 px-2 py-1 rounded-md border border-white/5">
+                                                        {role.permissions.length} nodes
                                                     </code>
                                                 </td>
                                             </TableRow>

@@ -4,7 +4,6 @@ import getNodes, { Context as NodesContext } from '@/api/routes/admin/nodes/getN
 import FlashMessageRender from '@/elements/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
 import { NavLink } from 'react-router-dom';
-import tw from 'twin.macro';
 import AdminContentBlock from '@/elements/AdminContentBlock';
 import AdminTable, {
     TableBody,
@@ -20,12 +19,10 @@ import AdminTable, {
 import { Button } from '@/elements/button';
 import CopyOnClick from '@/elements/CopyOnClick';
 import { bytesToString, mbToBytes } from '@/lib/formatters';
-import { useStoreState } from '@/state/hooks';
 import { Dialog } from '@/elements/dialog';
 import NewNodeContainer from './NewNodeContainer';
 
 const NodesContainer = () => {
-    const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(NodesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: nodes, error, isValidating } = getNodes();
@@ -55,33 +52,36 @@ const NodesContainer = () => {
 
     return (
         <AdminContentBlock title={'Nodes'}>
-            <Dialog title={'Create a New Node'} open={open} onClose={() => setOpen(false)} size={'xl'}>
+            <Dialog title={'Provision New Infrastructure'} open={open} onClose={() => setOpen(false)} size={'xl'}>
                 <NewNodeContainer />
             </Dialog>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Nodes</h2>
-                    <p
-                        css={tw`hidden md:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        All nodes available on the system.
+
+            <div className="w-full flex flex-col md:flex-row items-center mb-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left">
+                    <h2 className="text-3xl text-neutral-50 font-semibold tracking-tight uppercase">Nodes</h2>
+                    <p className="text-sm text-neutral-400 mt-1 opacity-70">
+                        Manage and scale your computing resources across global regions.
                     </p>
                 </div>
 
-                <div css={tw`flex ml-auto pl-4`}>
-                    <Button type={'button'} css={tw`h-10 px-4 py-0 whitespace-nowrap`} onClick={() => setOpen(true)}>
-                        New Node
+                <div className="flex items-center gap-4">
+                    <Button 
+                        type={'button'} 
+                        className="shadow-zb-glow-sm/20 px-8 py-2.5 h-auto font-medium" 
+                        onClick={() => setOpen(true)}
+                    >
+                        Provision Node
                     </Button>
                 </div>
             </div>
 
-            <FlashMessageRender byKey={'nodes'} css={tw`mb-4`} />
+            <FlashMessageRender byKey={'nodes'} className="mb-6" />
 
             <AdminTable>
                 <ContentWrapper onSearch={onSearch}>
                     <Pagination data={nodes} onPageSelect={setPage}>
-                        <div css={tw`overflow-x-auto`}>
-                            <table css={tw`w-full table-auto`}>
+                        <div className="overflow-x-auto no-scrollbar">
+                            <table className="w-full border-separate border-spacing-y-2">
                                 <TableHead>
                                     <TableHeader
                                         name={'ID'}
@@ -99,12 +99,12 @@ const NodesContainer = () => {
                                         onClick={() => setSort('fqdn')}
                                     />
                                     <TableHeader
-                                        name={'Total Memory'}
+                                        name={'Memory Capability'}
                                         direction={sort === 'memory' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('memory')}
                                     />
                                     <TableHeader
-                                        name={'Total Disk'}
+                                        name={'Disk Capability'}
                                         direction={sort === 'disk' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('disk')}
                                     />
@@ -117,51 +117,49 @@ const NodesContainer = () => {
                                         !isValidating &&
                                         length > 0 &&
                                         nodes.items.map(node => (
-                                            <TableRow key={node.id}>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                            <TableRow key={node.id} className="group bg-zb-card/30 backdrop-blur-md hover:bg-white/5 transition-all duration-300">
+                                                <td className="px-6 py-4 text-sm first:rounded-l-2xl">
                                                     <CopyOnClick text={node.id.toString()}>
-                                                        <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                        <code className="font-mono bg-black/40 text-zb-accent px-2 py-1 rounded-md border border-white/5 group-hover:border-zb-accent/30 transition-colors">
                                                             {node.id}
                                                         </code>
                                                     </CopyOnClick>
                                                 </td>
 
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm font-medium">
                                                     <NavLink
                                                         to={`/admin/nodes/${node.id}`}
-                                                        style={{ color: colors.primary }}
-                                                        className={'hover:brightness-125 duration-300'}
+                                                        className="text-neutral-100 hover:text-zb-accent transition-colors duration-300"
                                                     >
                                                         {node.name}
                                                     </NavLink>
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+
+                                                <td className="px-6 py-4 text-sm">
                                                     <CopyOnClick text={node.fqdn}>
-                                                        <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                        <span className="text-neutral-400 group-hover:text-neutral-200 transition-colors">
                                                             {node.fqdn}
-                                                        </code>
+                                                        </span>
                                                     </CopyOnClick>
                                                 </td>
 
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm text-neutral-300 tabular-nums uppercase tracking-tighter">
                                                     {bytesToString(mbToBytes(node.memory))}
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm text-neutral-300 tabular-nums uppercase tracking-tighter">
                                                     {bytesToString(mbToBytes(node.disk))}
                                                 </td>
 
-                                                <td css={tw`px-6 whitespace-nowrap`}>
+                                                <td className="px-6 py-4 last:rounded-r-2xl text-right">
                                                     {node.scheme === 'https' ? (
-                                                        <span
-                                                            css={tw`px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800`}
-                                                        >
-                                                            Secure
+                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zb-success/10 text-zb-success border border-zb-success/20 shadow-[0_0_12px_-3px_rgba(16,185,129,0.3)]">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-zb-success" />
+                                                            Secure Connection
                                                         </span>
                                                     ) : (
-                                                        <span
-                                                            css={tw`px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-200 text-red-800`}
-                                                        >
-                                                            Non-Secure
+                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zb-danger/10 text-zb-danger border border-zb-danger/20 shadow-[0_0_12px_-3px_rgba(239,68,68,0.3)]">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-zb-danger animate-pulse" />
+                                                            Unencrypted
                                                         </span>
                                                     )}
                                                 </td>

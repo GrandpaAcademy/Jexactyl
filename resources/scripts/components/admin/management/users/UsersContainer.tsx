@@ -1,4 +1,3 @@
-import tw from 'twin.macro';
 import { Link, NavLink } from 'react-router-dom';
 import AdminContentBlock from '@/elements/AdminContentBlock';
 import { Button } from '@/elements/button';
@@ -26,12 +25,10 @@ import AdminTable, {
     TableRow,
     useTableHooks,
 } from '@/elements/AdminTable';
-import { useStoreState } from '@/state/hooks';
 import Pill from '@/elements/Pill';
 
 function UsersContainer() {
     const { data: users, error, isValidating } = useGetUsers();
-    const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, sort, sortDirection, setSort, setFilters } = useContext(UsersContext);
 
     const length = users?.items?.length || 0;
@@ -52,29 +49,29 @@ function UsersContainer() {
 
     return (
         <AdminContentBlock title={'User Accounts'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>User Accounts</h2>
-                    <p
-                        css={tw`hidden md:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        All users that have access to the system.
+            <div className="w-full flex flex-col md:flex-row items-center mb-10 gap-6">
+                <div className="flex flex-col flex-grow min-w-0 text-center md:text-left">
+                    <h2 className="text-3xl text-neutral-50 font-semibold tracking-tight uppercase tracking-widest">User Governance</h2>
+                    <p className="text-sm text-neutral-400 mt-1 opacity-70">
+                        Monitor and manage authentication, permissions, and security profiles.
                     </p>
                 </div>
 
-                <div css={tw`flex ml-auto pl-4`}>
+                <div className="flex items-center gap-4">
                     <Link to={'/admin/users/new'}>
-                        <Button>
-                            <FontAwesomeIcon icon={faPlus} className={'mr-2 my-auto'} /> New User
+                        <Button className="shadow-zb-glow-sm/20 px-8 py-2.5 h-auto font-medium flex items-center gap-2 group">
+                            <FontAwesomeIcon icon={faPlus} className="group-hover:rotate-90 transition-transform duration-300" />
+                            <span>Create User</span>
                         </Button>
                     </Link>
                 </div>
             </div>
+
             <AdminTable>
                 <ContentWrapper onSearch={onSearch}>
                     <Pagination data={users} onPageSelect={setPage}>
-                        <div css={tw`overflow-x-auto`}>
-                            <table css={tw`w-full table-auto`}>
+                        <div className="overflow-x-auto no-scrollbar">
+                            <table className="w-full border-separate border-spacing-y-2">
                                 <TableHead>
                                     <TableHeader
                                         name={'ID'}
@@ -82,27 +79,27 @@ function UsersContainer() {
                                         onClick={() => setSort('id')}
                                     />
                                     <TableHeader
-                                        name={'Username'}
+                                        name={'Identity'}
                                         direction={sort === 'username' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('username')}
                                     />
                                     <TableHeader
-                                        name={'Email Address'}
+                                        name={'Email Correspondence'}
                                         direction={sort === 'email' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('email')}
                                     />
                                     <TableHeader
-                                        name={'2FA Enabled'}
+                                        name={'Vulnerability Status (2FA)'}
                                         direction={sort === 'use_totp' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('use_totp')}
                                     />
                                     <TableHeader
-                                        name={'State'}
+                                        name={'Operational State'}
                                         direction={sort === 'state' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('state')}
                                     />
                                     <TableHeader
-                                        name={'permissions'}
+                                        name={'Access Tier'}
                                         direction={sort === 'root_admin' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('root_admin')}
                                     />
@@ -114,101 +111,66 @@ function UsersContainer() {
                                         !isValidating &&
                                         length > 0 &&
                                         users.items.map(user => (
-                                            <TableRow key={user.id}>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                            <TableRow key={user.id} className="group bg-zb-card/30 backdrop-blur-md hover:bg-white/5 transition-all duration-300">
+                                                <td className="px-6 py-4 text-sm first:rounded-l-2xl">
+                                                    <code className="font-mono bg-black/40 text-zb-accent px-2 py-1 rounded-md border border-white/5 group-hover:border-zb-accent/30 transition-colors uppercase">
                                                         {user.id}
                                                     </code>
                                                 </td>
-                                                <td
-                                                    css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap hover:brightness-125`}
-                                                    style={{ color: colors.primary }}
-                                                >
-                                                    <NavLink to={`/admin/users/${user.id}`}>{user.username}</NavLink>
+                                                <td className="px-6 py-4 text-sm font-medium">
+                                                    <NavLink
+                                                        to={`/admin/users/${user.id}`}
+                                                        className="text-neutral-100 hover:text-zb-accent transition-colors duration-300"
+                                                    >
+                                                        {user.username}
+                                                    </NavLink>
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm text-neutral-400">
                                                     {user.email}
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <td className="px-6 py-4 text-sm">
                                                     {user.isUsingTwoFactor ? (
                                                         <Pill type={'success'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faLock}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
-                                                            Enabled
+                                                            <FontAwesomeIcon icon={faLock} className="mr-1.5" />
+                                                            Secured
                                                         </Pill>
                                                     ) : (
                                                         <Pill type={'danger'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faLockOpen}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
-                                                            Disabled
+                                                            <FontAwesomeIcon icon={faLockOpen} className="mr-1.5" />
+                                                            Vulnerable
                                                         </Pill>
                                                     )}
                                                 </td>
-                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
+                                                <td className="px-6 py-4 text-sm">
                                                     {user.state === 'suspended' ? (
                                                         <Pill type={'warn'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faUserSlash}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
+                                                            <FontAwesomeIcon icon={faUserSlash} className="mr-1.5" />
                                                             Suspended
                                                         </Pill>
                                                     ) : (
                                                         <Pill type={'success'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faUserCheck}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
-                                                            Active
+                                                            <FontAwesomeIcon icon={faUserCheck} className="mr-1.5" />
+                                                            Verified
                                                         </Pill>
                                                     )}
                                                 </td>
-                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
+                                                <td className="px-6 py-4 last:rounded-r-2xl text-sm">
                                                     {user.isRootAdmin || user.admin_role_id ? (
-                                                        <>
-                                                            <Pill type={'success'}>
-                                                                <FontAwesomeIcon
-                                                                    icon={faUserGear}
-                                                                    className={'my-auto mr-1'}
-                                                                    size={'sm'}
-                                                                />{' '}
-                                                                Admin
+                                                        <div className="flex items-center gap-2">
+                                                            <Pill type={'info'}>
+                                                                <FontAwesomeIcon icon={faUserGear} className="mr-1.5" />
+                                                                Administrator
                                                             </Pill>
-                                                            {user.admin_role_id ? (
-                                                                <Pill type={'info'}>
-                                                                    <FontAwesomeIcon
-                                                                        icon={faIdBadge}
-                                                                        className={'my-auto mr-1'}
-                                                                        size={'sm'}
-                                                                    />{' '}
+                                                            {user.admin_role_id && (
+                                                                <Pill type={'unknown'}>
+                                                                    <FontAwesomeIcon icon={faIdBadge} className="mr-1.5" />
                                                                     {user.roleName}
                                                                 </Pill>
-                                                            ) : (
-                                                                <Pill type={'warn'}>
-                                                                    <FontAwesomeIcon
-                                                                        icon={faIdBadge}
-                                                                        className={'my-auto mr-1'}
-                                                                        size={'sm'}
-                                                                    />{' '}
-                                                                    Full Access
-                                                                </Pill>
                                                             )}
-                                                        </>
+                                                        </div>
                                                     ) : (
                                                         <Pill type={'unknown'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faUser}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
+                                                            <FontAwesomeIcon icon={faUser} className="mr-1.5" />
                                                             Standard
                                                         </Pill>
                                                     )}
